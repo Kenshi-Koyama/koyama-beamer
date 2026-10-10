@@ -1,4 +1,4 @@
-title: Econ Beamer (Japanese)
+title: Koyama Beamer (Japanese)
 author: Kenshi Koyama
 version: 1.0.0
 quarto-required: ">=1.4.0"
@@ -11,4 +11,4 @@ contributes:
       keep-tex: true
       citeproc: false   # 引用は biblatex に一本化（pandoc の citeproc を無効化）
       filters:
-        - econ.lua
+        - koyama.lua

@@ -7,9 +7,11 @@ date: today
 # --- 切り替えオプション（必要なときだけ書く） ---
 # section-outline: false      # 各セクション冒頭の Outline を入れない（短い発表用）
 # bib-file: ../paper/refs.bib # 文献ファイル（既定はこのフォルダの ref.bib）
+# palette:                    # この研究用に色を差し替える（書いた色だけ）
+#   primary: "1F4E79"
 # output-file: Name_slides.pdf
 format:
-  econ-beamer: default
+  koyama-beamer: default
 ---
 
 # Introduction
@@ -26,7 +28,7 @@ format:
 -   **Method**
     -   延長の導入時期のずれを使った差の差（DiD）＋イベントスタディ
 
-$\Rightarrow$ 最も相談したいこと：導入時期が\textcolor{mainred}{内生的}でないことをどう示すか
+$\Rightarrow$ 最も相談したいこと：導入時期が\textcolor{accent}{内生的}でないことをどう示すか
 
 ## 先行研究：差の差の推定方法
 
@@ -40,11 +42,11 @@ $\Rightarrow$ 最も相談したいこと：導入時期が\textcolor{mainred}{�
     -   群・時点ごとの効果を推定して集計する \srcite{callaway2021}
     -   イベントスタディの係数を重み付けし直す \srcite{sun2021}
 
-$\Rightarrow$ 本研究は\textcolor{mainblue}{異質性に頑健な推定量}を主分析に使う
+$\Rightarrow$ 本研究は\textcolor{primary}{異質性に頑健な推定量}を主分析に使う
 
-## \textcolor{mainred}{本研究の位置づけ（発表者の見解）}
+## \textcolor{accent}{本研究の位置づけ（発表者の見解）}
 
-見出しを赤にしたスライド = 論文の要約ではなく自分の見解
+見出しを accent の色にしたスライド = 論文の要約ではなく自分の見解
 
 -   既存研究は「学校の中」の学習環境に集中
 -   「学校の外」の公共空間の効果はほとんど測られていない
@@ -69,14 +71,14 @@ $\Rightarrow$ 本研究は\textcolor{mainblue}{異質性に頑健な推定量}�
 \toprule
 データ & 提供元 & 主な内容 \\
 \midrule
-\cellcolor{mainorange!25}図書館の開館時間 & 架空の調査 & 平日の閉館時刻・延長の開始年 \\
+\cellcolor{highlight!25}図書館の開館時間 & 架空の調査 & 平日の閉館時刻・延長の開始年 \\
 学習時間調査 & 架空の調査 & 中高生の平日の家庭外学習時間 \\
 人口統計 & 架空の統計 & 人口・世帯構成 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\slidenote{Note: 表・図の数値はすべて架空。セルの強調（オレンジ）は 1 表 1〜2 か所まで。}
+\slidenote{Note: 表・図の数値はすべて架空。セルの強調（highlight）は 1 表 1〜2 か所まで。}
 
 -   観察単位：市町村（$j$）$\times$ 年（$t$）
 -   処置：閉館時刻を\ybox{20 時以降}に延長
@@ -129,13 +131,13 @@ Y_{jt} = \sum_{k \neq -1} \beta_k \, \mathbb{1}\{t - E_j = k\} + \gamma X_{jt} +
 \end{equation}
 \begin{defbox}
 \begin{itemize}\small
-  \item[\textcolor{mainblue}{$\bullet$}] \textbf{Outcome variable}
+  \item[] \textbf{Outcome variable}
     \begin{itemize}
       \item $Y_{jt}$：平日の家庭外学習時間（分）
     \end{itemize}
-  \item[\textcolor{mainblue}{$\bullet$}] \textbf{Main explanatory variables}
+  \item[] \textbf{Main explanatory variables}
     \begin{itemize}
-      \item $E_j$：延長を導入した年。基準は\textcolor{mainred}{導入の前年}（$k=-1$）
+      \item $E_j$：延長を導入した年。基準は\textcolor{accent}{導入の前年}（$k=-1$）
       \item $X_{jt}$：人口・世帯構成
     \end{itemize}
 \end{itemize}
@@ -158,7 +160,7 @@ Y_{jt} = \sum_{k \neq -1} \beta_k \, \mathbb{1}\{t - E_j = k\} + \gamma X_{jt} +
 \toprule
  & (1) TWFE & (2) CS \\
 \midrule
-延長 & 6.1$^{**}$ & \cellcolor{mainorange!25}8.4$^{***}$ \\
+延長 & 6.1$^{**}$ & \cellcolor{highlight!25}8.4$^{***}$ \\
      & (2.7) & (2.9) \\[0.2em]
 対象 & 全体 & 全体 \\
 N    & 1{,}200 & 1{,}200 \\
@@ -169,7 +171,7 @@ N    & 1{,}200 & 1{,}200 \\
 :::
 
 ::: {.column width="44%"}
--   どちらも\textcolor{mainblue}{正}の効果
+-   どちらも\textcolor{primary}{正}の効果
 -   頑健な推定量で\ybox{より大きい}
 -   $\to$ TWFE は過小推定の可能性
 :::
@@ -182,7 +184,7 @@ N    & 1{,}200 & 1{,}200 \\
 | 生徒の区分 | 効果（分） | 標準誤差 |
 |:-----------|:----------:|:--------:|
 | 自室あり   | 3.2        | (2.4)    |
-| 自室なし   | \textcolor{mainred}{\textbf{12.7}} | (3.8) |
+| 自室なし   | \textcolor{accent}{\textbf{12.7}} | (3.8) |
 
 \slidenote{Note: 強調が不要な表は Markdown のパイプテーブルで書いてよい（booktabs 風に出力される）。}
 
@@ -219,8 +221,6 @@ N    & 1{,}200 & 1{,}200 \\
 
 ## References {.allowframebreaks}
 
-\scriptsize
-\setlength{\bibitemsep}{2pt}
 \printbibliography[heading=none]
 
 ## 記述統計（Appendix）

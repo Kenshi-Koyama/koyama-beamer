@@ -1,12 +1,29 @@
 # 変更履歴
 
-版は `_extensions/econ/_extension.yml` の `version`。
+版は `_extensions/koyama/_extension.yml` の `version`。
+
+## 未リリース（相談中）
+
+- 拡張機能の名前を `econ` から `koyama` に変更（`format: koyama-beamer`）
+- 色を役割の名前に変更（パレットを差し替えても名前と色が食い違わないように）：
+  `mainblue`→`primary`、`subblue`→`primarylight`、`midblue`→`primarymid`、`mainred`→`accent`、
+  `subred`→`accentlight`、`mainorange`→`highlight`、`textblack`→`textmain`、`textgray`→`textmuted`、`bgwhite`→`background`
+- 図のルールを「なるべく大きく見せる」方針と、スライドごとに選ぶ手段の一覧に変更（型は決め打ちしない）。
+  2カラムの幅も決め打ちをやめた。縦横比は 4:3 のまま
+
+- 基本方針を「1枚 = 1メッセージ」だけにし、リード文・箇条書き・`⇒` の結論は必要なときだけ使う型に変更（図表だけのスライドも可）
+- `Table X:` / `Figure X:` のラベルを blue から黒の太字に変更
+- 太字だけの見出し項目（下に子の箇条書きがあるもの）は自動で ● を付けない
+- YAML の `palette:` で研究ごとに色を差し替えられるようにした。workflow に「パレットを決める」段階を追加
+- 参考文献リストを 7pt・行送り 8.4pt にし、1枚に多く載せる（以前は biblatex と metropolis の既定で `\normalsize` になっていた）。
+  続きのページのタイトル番号（i, ii …）を付けない
+- recipes の誤りを修正：`deck-preamble.tex` はテンプレートのプリアンブルより前に入る
 
 ## 1.0.0（2026-10-10）
 
 各研究に散らばっていたプリアンブルとルールを、このリポジトリに一本化した最初の版。
 
-- Quarto の拡張機能にした（`format: econ-beamer`）。`quarto use template` / `quarto add` で各デッキに入れる
+- Quarto の拡張機能にした（`format: koyama-beamer`）。`quarto use template` / `quarto add` で各デッキに入れる
 - YAML の切り替えオプションを追加
   - `section-outline: false`：各セクション冒頭の Outline を入れない（短い発表用）
   - `bib-file:`：文献ファイルの指定（既定 `ref.bib`）
@@ -20,5 +37,5 @@
 - 2026-07：Overleaf の Beamer 手書きから Quarto → Beamer に移行。色を teal / yellow から blue / red / orange に変更
   （orange は文字色に使わず、枠・セル背景だけに限定）
 - 2026-08：日本語フォントを Yu Gothic から Noto Sans JP（Medium / SemiBold）に変更（通常ウェイトが細く投影で読みにくかったため）。
-  blue の文中単独強調を解禁し、文中強調を `\alert` から `\textcolor{mainred|mainblue}{...}` に統一。
+  blue の文中単独強調を解禁し、文中強調を `\alert` から `\textcolor{mainred|mainblue}{...}`（当時の色名） に統一。
   Outline の現在セクションが blue にならない不具合（`\hypersetup` の `linkcolor` が優先される）を修正

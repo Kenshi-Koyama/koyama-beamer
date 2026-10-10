@@ -14,3 +14,4 @@
 *.fdb_latexmk
 .quarto/
 *_files/
+_review/

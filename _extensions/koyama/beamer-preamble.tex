@@ -1,9 +1,9 @@
 %==================================================================
 %  Quarto -> Beamer 用プリアンブル（docs/SlideRules.md 準拠）
-%  econ.lua がこのファイルをヘッダに入れる。その直前に、YAML の
+%  koyama.lua がこのファイルをヘッダに入れる。その直前に、YAML の
 %  切り替えオプションから作った設定マクロが入る:
-%    \econNoSectionOutline … section-outline: false のとき定義される
-%    \econBibFile          … 文献ファイル（bib-file:、既定 ref.bib）
+%    \koyamaNoSectionOutline … section-outline: false のとき定義される
+%    \koyamaBibFile          … 文献ファイル（bib-file:、既定 ref.bib）
 %  テーマの起動（\usetheme）は Quarto(YAML) 側ではなく、ここで完全に制御する。
 %==================================================================
 
@@ -29,23 +29,25 @@
 
 %========================
 %  色の定義
-%  役割: blue=構造＋文中強調（単独可） / red=文中強調・対比の一方 / orange=box・表の強調（\ybox 等）
-%  文中強調は \textcolor{mainred}{...} / \textcolor{mainblue}{...} を直接使う
-%  （\alert はredのみでblueに使えないため、red/blue共通の書き方として統一）。
-%  注意: orange はテキスト色として単体で使うと白背景でのコントラストが
+%  役割: primary=構造＋文中強調（単独可） / accent=文中強調・対比の一方 / highlight=box・表の強調（\ybox 等）
+%  文中強調は \textcolor{accent}{...} / \textcolor{primary}{...} を直接使う
+%  （\alert はaccentのみでprimaryに使えないため、accent/primary共通の書き方として統一）。
+%  注意: highlight はテキスト色として単体で使うと白背景でのコントラストが
 %  弱く（実測コントラスト比 約1.6:1）、プロジェクター投影で特に読みにくい。
 %  そのため文中強調には使わず、枠線・薄い塗りの box/表セル用途に限定する。
+%  ※ \providecolor なので、YAML の palette: で先に定義された色があればそちらが使われる
+%     （研究ごとにパレットを変えるとき。docs/recipes.md）。
 %========================
-\definecolor{textblack}{RGB}{42,46,51}
-\definecolor{textgray}{RGB}{141,142,143}
-\definecolor{bgwhite}{RGB}{255,255,255}
-\definecolor{mainblue}{RGB}{54,136,214}     % 構造の主役（frametitle帯・箇条書き点など）
-\definecolor{subblue}{RGB}{227,241,255}     % frametitle帯・定義ボックス地（最も淡いブルー）
-\definecolor{mainred}{RGB}{210,48,55}       % 文中強調・対比の一方（白背景コントラスト比 約5.0:1）
-\definecolor{subred}{RGB}{249,183,185}
-\definecolor{mainorange}{RGB}{240,199,74}   % box・表セルの強調（\ybox・cellcolor 用。文字色には使わない）
+\providecolor{textmain}{RGB}{42,46,51}
+\providecolor{textmuted}{RGB}{141,142,143}
+\providecolor{background}{RGB}{255,255,255}
+\providecolor{primary}{RGB}{54,136,214}     % 構造の主役（frametitle帯・箇条書き点など）
+\providecolor{primarylight}{RGB}{227,241,255}     % frametitle帯・定義ボックス地（最も淡いブルー）
+\providecolor{accent}{RGB}{210,48,55}       % 文中強調・対比の一方（白背景コントラスト比 約5.0:1）
+\providecolor{accentlight}{RGB}{249,183,185}
+\providecolor{highlight}{RGB}{240,199,74}   % box・表セルの強調（\ybox・cellcolor 用。文字色には使わない）
 % 中間トーン（ナビバー帯・block body など）は主色から自動計算で導出
-\colorlet{midblue}{mainblue!35!white}
+\colorlet{primarymid}{primary!35!white}
 
 %========================
 %  テーマ（metropolis + 上部ナビバー miniframes）
@@ -53,73 +55,73 @@
 %========================
 \usetheme{metropolis}
 
-\setbeamercolor{normal text}{fg=textblack, bg=bgwhite}
-\setbeamercolor{background canvas}{bg=bgwhite}
-\setbeamercolor{title}{fg=textblack}
-\setbeamercolor{subtitle}{fg=mainblue}
-\setbeamercolor{institute}{fg=mainred}
-\setbeamercolor{frametitle}{fg=textblack, bg=subblue}
-\setbeamercolor{block title}{bg=mainblue, fg=white}
-\setbeamercolor{block body}{bg=midblue}
-\setbeamercolor{alerted text}{fg=mainred}
-\setbeamercolor{block title alerted}{bg=mainred, fg=white}
-\setbeamercolor{block body alerted}{bg=subred}
-\setbeamercolor{block title example}{bg=mainblue, fg=white}
-\setbeamercolor{block body example}{bg=midblue}
-\setbeamercolor{progress bar}{fg=mainred, bg=subred}
-\setbeamercolor{palette primary}{bg=mainblue, fg=white}
-\setbeamercolor{palette secondary}{bg=midblue, fg=textblack}
-\setbeamercolor{palette tertiary}{bg=mainred, fg=white}
-\setbeamercolor{palette quaternary}{bg=subred, fg=textblack}
+\setbeamercolor{normal text}{fg=textmain, bg=background}
+\setbeamercolor{background canvas}{bg=background}
+\setbeamercolor{title}{fg=textmain}
+\setbeamercolor{subtitle}{fg=primary}
+\setbeamercolor{institute}{fg=accent}
+\setbeamercolor{frametitle}{fg=textmain, bg=primarylight}
+\setbeamercolor{block title}{bg=primary, fg=white}
+\setbeamercolor{block body}{bg=primarymid}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamercolor{block title alerted}{bg=accent, fg=white}
+\setbeamercolor{block body alerted}{bg=accentlight}
+\setbeamercolor{block title example}{bg=primary, fg=white}
+\setbeamercolor{block body example}{bg=primarymid}
+\setbeamercolor{progress bar}{fg=accent, bg=accentlight}
+\setbeamercolor{palette primary}{bg=primary, fg=white}
+\setbeamercolor{palette secondary}{bg=primarymid, fg=textmain}
+\setbeamercolor{palette tertiary}{bg=accent, fg=white}
+\setbeamercolor{palette quaternary}{bg=accentlight, fg=textmain}
 
 % 上部セクション進行バー（現在=黒/太字、他=グレー、丸印で位置表示）
 \useoutertheme[subsection=false]{miniframes}
 \setbeamerfont{section in head/foot}{series=\bfseries}
-\setbeamercolor{section in head/foot}{fg=textblack, bg=midblue}
+\setbeamercolor{section in head/foot}{fg=textmain, bg=primarymid}
 \addtobeamertemplate{frametitle}{\vskip -0.01cm}{}
 \setbeamertemplate{navigation symbols}{}
 
 % Outline スライド（\tableofcontents[currentsection]）：現在のセクションは太字・blue、
 % それ以外は既定のシェード（薄いblue、グレーではない）のまま変更しない
 \setbeamerfont{section in toc}{series=\bfseries}
-\setbeamercolor{section in toc}{fg=mainblue}
+\setbeamercolor{section in toc}{fg=primary}
 
 % タイトル下の区切り線の色（metropolis のバージョンにより反映されない場合あり。
 % 反映されないときは既定のグレーのまま＝十分自然なのでそのままでよい）
-\setbeamercolor{title separator}{fg=mainblue}
+\setbeamercolor{title separator}{fg=primary}
 
 % 発表者オリジナルの意見・構成のスライドを示す強調色。
 % 注意: \setbeamercolor{frametitle}{...} を ## 見出しの前後の生LaTeXブロックで
 % 切り替える方式は、pandoc がそのブロックを「前フレームの本文末尾」に
 % 配置し、かつ beamer の frame 環境が内部でグループ化されているために
 % \end{frame} で変更が巻き戻ってしまい機能しない（要注意点）。
-% そのため、対象スライドは見出し自体を \textcolor{mainred}{...} で
+% そのため、対象スライドは見出し自体を \textcolor{accent}{...} で
 % 直接色付けする方式を採用している（template.qmd の該当 ## 見出しを参照）。
 
 % \appendix が part page（"Appendix" ボックス）を挿入しないよう無効化
 \AtBeginPart{}
 
-% 箇条書きの記号色を blue に（L1 の ●）
-\setbeamercolor{itemize item}{fg=mainblue}
-\setbeamercolor{itemize subitem}{fg=mainblue}
-\setbeamercolor{itemize subsubitem}{fg=mainblue}
-\setbeamercolor{enumerate item}{fg=mainblue}
+% 箇条書きの記号色を primary に（L1 の ●）
+\setbeamercolor{itemize item}{fg=primary}
+\setbeamercolor{itemize subitem}{fg=primary}
+\setbeamercolor{itemize subsubitem}{fg=primary}
+\setbeamercolor{enumerate item}{fg=primary}
 
 % 各セクションの冒頭に、現在位置を強調した目次（Outline）を自動挿入（非該当セクションは淡色）。
 % YAML で section-outline: false のときは入れない（短い発表用）。
 % このとき \AtBeginSection を空にするのは、metropolis 既定のセクション区切りページ
 % （これも \AtBeginSection で入る）まで出てこないようにするため。
 % 注意: tableofcontents の各項目は内部的に \hyperlink なので、
-% \hypersetup の linkcolor（=textblack）の方が section in toc の色設定より
+% \hypersetup の linkcolor（=textmain）の方が section in toc の色設定より
 % 優先されてしまい、何もしないと常に黒字になる。ここでローカルに
-% linkcolor を上書きして、狙い通り現在セクションが blue になるようにする。
-\ifdefined\econNoSectionOutline
+% linkcolor を上書きして、狙い通り現在セクションが primary になるようにする。
+\ifdefined\koyamaNoSectionOutline
   \AtBeginSection[]{}
 \else
   \AtBeginSection[]{%
     \begin{frame}{Outline}
       \begingroup
-      \hypersetup{linkcolor=mainblue}
+      \hypersetup{linkcolor=primary}
       \tableofcontents[currentsection]
       \endgroup
     \end{frame}}
@@ -142,16 +144,16 @@
 %========================
 \tikzset{
   dag_node/.style={
-    draw=textblack, ellipse,
+    draw=textmain, ellipse,
     minimum width=2.0cm, minimum height=1.0cm,
-    thick, align=center, fill=bgwhite, font=\small
+    thick, align=center, fill=background, font=\small
   },
   box_node/.style={          % 決定木の通常ノード（blue）
-    draw=mainblue, fill=midblue, rounded corners=2pt,
+    draw=primary, fill=primarymid, rounded corners=2pt,
     minimum width=2.4cm, minimum height=0.9cm, align=center, font=\small
   },
   key_node/.style={          % 強調したい結論ノード（red系で差別化）
-    draw=mainred, fill=subred, rounded corners=2pt,
+    draw=accent, fill=accentlight, rounded corners=2pt,
     minimum width=2.4cm, minimum height=0.9cm, align=center, font=\small\bfseries
   },
   arrow/.style={
@@ -165,36 +167,36 @@
 %========================
 % (1) 数式の変数定義ゾーン（淡いblue地のボックス）
 \newtcolorbox{defbox}{
-  colback=subblue, colframe=subblue,
+  colback=primarylight, colframe=primarylight,
   boxrule=0pt, arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt,
   before skip=6pt, after skip=6pt
 }
 
-% (2) 表・数値の「オレンジ枠」強調。
+% (2) 表・数値の「highlight の枠」強調。
 %     枠線・薄い塗りとしての使用なので、文字色ほどコントラストは問題にならない。
-%     セル背景で強調したい場合は表内で \cellcolor{mainorange!25}{...} を使う。
+%     セル背景で強調したい場合は表内で \cellcolor{highlight!25}{...} を使う。
 %     注意: \ybox は "on line"（改行しない箱）なので短い語句専用。
 %     文章まるごと強調したいときは下の keytakeaway 環境（複数行対応）を使う。
-\newtcbox{\ybox}{on line, colframe=mainorange, colback=mainorange!25,
+\newtcbox{\ybox}{on line, colframe=highlight, colback=highlight!25,
   boxrule=1pt, arc=2pt, boxsep=1.5pt, left=2pt, right=2pt, top=1pt, bottom=1pt}
 
-% (2b) 文章単位の「まとめ・要点」強調（折り返し対応、オレンジ地）。
+% (2b) 文章単位の「まとめ・要点」強調（折り返し対応、highlight の地）。
 %      表・数値の強調に加え、議論の転換点・核心の一文を格上げする用途にも使ってよい
 %      （多用しない＝1デッキで数回程度、本当に格上げしたい一文だけに絞る）。
 \newtcolorbox{keytakeaway}{
-  colback=mainorange!25, colframe=mainorange,
+  colback=highlight!25, colframe=highlight,
   boxrule=1pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
   before skip=4pt, after skip=4pt, fontupper=\small
 }
 
-% (3) Table / Figure ラベル（blue 太字）
-\newcommand{\tlabel}[1]{\textcolor{mainblue}{\textbf{#1}}}
+% (3) Table / Figure ラベル（黒の太字）
+\newcommand{\tlabel}[1]{\textbf{#1}}
 
 % (3b) 図表下の注釈・箇条書き項目の出典（グレー・小さめ）。行頭の生波括弧を避けるためコマンド化。
-\newcommand{\slidenote}[1]{{\footnotesize\color{textgray}#1}}
+\newcommand{\slidenote}[1]{{\footnotesize\color{textmuted}#1}}
 
 % (3c) \slidenote よりさらに小さい注（表の下のSE・有意水準の注記など、詰めて書きたい箇所用）。
-\newcommand{\tinynote}[1]{{\tiny\color{textgray}#1}}
+\newcommand{\tinynote}[1]{{\tiny\color{textmuted}#1}}
 
 % (3d) 箇条書き項目の出典。(Author, Year) が途中で折り返さないよう \mbox で包む。
 %      使い方: 項目本文の末尾に \srcite{key}
@@ -204,9 +206,9 @@
 %     本番では \includegraphics{ファイル名} に置き換える。
 \newcommand{\figplaceholder}[2][7cm]{%
   \begin{tikzpicture}
-    \node[draw=textgray, dashed, rounded corners=4pt, fill=black!2,
+    \node[draw=textmuted, dashed, rounded corners=4pt, fill=black!2,
           minimum width=#1, minimum height=3.4cm,
-          align=center, text=textgray, font=\small]
+          align=center, text=textmuted, font=\small]
       {\itshape 図をここに配置\\[2pt] \ttfamily #2};
   \end{tikzpicture}}
 
@@ -220,18 +222,32 @@
 \usepackage{csquotes}
 \usepackage[style=apa, backend=biber]{biblatex}
 \DeclareLanguageMapping{english}{english-apa}
-\providecommand{\econBibFile}{ref.bib}
-\addbibresource{\econBibFile}
+\providecommand{\koyamaBibFile}{ref.bib}
+\addbibresource{\koyamaBibFile}
 \AtEveryBibitem{
   \clearfield{doi}\clearfield{url}\clearfield{isbn}\clearfield{issn}
   \clearfield{note}\clearfield{month}\clearfield{issue}\clearfield{number}
   \clearfield{pmid}\clearfield{pmcid}\clearfield{abstract}
 }
-% 文献リストの見た目：先頭アイコンを消し、タイトルを通常ウェイトに
+% 文献リストの見た目：先頭アイコンを消し、タイトルを通常ウェイトに。
+% 文字は小さく・行間を詰めて、1枚になるべく多く載せる。
+% （biblatex は \bibfont を、metropolis は文献の各部分の文字を \normalsize に固定するので、
+%   スライド側で \scriptsize と書いても効かない。両方ここで変える）
+%   文字の大きさは \koyamaBibSize（7pt・行送り 8.4pt）。デッキ側で先に \newcommand すれば変えられる。
+\providecommand{\koyamaBibSize}{\fontsize{7}{8.4}\selectfont}
+\renewcommand*{\bibfont}{\koyamaBibSize}
+\setbeamerfont{bibliography entry author}{size=\koyamaBibSize}
+\setbeamerfont{bibliography entry title}{size=\koyamaBibSize, series=\mdseries}
+\setbeamerfont{bibliography entry location}{size=\koyamaBibSize}
+\setbeamerfont{bibliography entry note}{size=\koyamaBibSize}
+\setlength{\bibitemsep}{1pt}
+\setlength{\bibhang}{1.5em}
 \setbeamertemplate{bibliography item}{}
+% allowframebreaks のタイトルに付く続きの番号（References i, ii …）を付けない
+\setbeamertemplate{frametitle continuation}{}
 \setbeamerfont{bibliography entry title}{series=\mdseries}
 
 %========================
 %  ハイパーリンク
 %========================
-\hypersetup{colorlinks=true, urlcolor=mainblue, linkcolor=textblack, citecolor=textblack}
+\hypersetup{colorlinks=true, urlcolor=primary, linkcolor=textmain, citecolor=textmain}

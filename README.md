@@ -1,4 +1,4 @@
-# econ-beamer：Quarto で作る日本語 Beamer スライド
+# koyama-beamer：Quarto で作る日本語 Beamer スライド
 
 Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプレート。
 経済学などの研究発表向けに、色の役割・表・数式・図のルールを決めてある。
@@ -37,7 +37,7 @@ quarto use template <このリポジトリのパス>
 report/slide/
 ├── slide.qmd        ← 見本（template.qmd）がフォルダ名に改名されたもの。ここを書き換える
 ├── ref.bib          ← 文献
-└── _extensions/econ/ ← テンプレート本体（書き換えない）
+└── _extensions/koyama/ ← テンプレート本体（書き換えない）
 ```
 
 あとは `slide.qmd` の YAML（`title` など）と本文を書き換えて、
@@ -56,7 +56,7 @@ YAML の `format:` を次のようにする：
 
 ```yaml
 format:
-  econ-beamer: default
+  koyama-beamer: default
 ```
 
 ### YAML のオプション
@@ -64,6 +64,8 @@ format:
 ```yaml
 section-outline: false        # 各セクション冒頭の Outline を入れない（短い発表用）
 bib-file: ../paper/refs.bib   # 文献ファイル（既定はスライドと同じフォルダの ref.bib）
+palette:                      # この研究用に色を差し替える（書いた色だけ。docs/recipes.md の 7.）
+  primary: "1F4E79"
 ```
 
 縦横比・エンジンなど（`aspectratio: 43`、`pdf-engine: lualatex`、`slide-level: 2`、`keep-tex: true`、
@@ -73,7 +75,7 @@ bib-file: ../paper/refs.bib   # 文献ファイル（既定はスライドと同
 
 - `#` = セクション（上部のナビバーに出る）、`##` = スライド1枚
 - **本文の先頭は必ず `#` 見出しで始める**（前に地の文やコメントがあると空のスライドが出る）
-- 細かい装飾は生 LaTeX で書く（例：`\textcolor{mainred}{強調}`、`\ybox{注目}`、`\srcite{key}`）。
+- 細かい装飾は生 LaTeX で書く（例：`\textcolor{accent}{強調}`、`\ybox{注目}`、`\srcite{key}`）。
   部品の一覧は [SlideRules.md の 11.](docs/SlideRules.md)
 
 ## テンプレートの更新と過去のスライド
@@ -84,6 +86,6 @@ bib-file: ../paper/refs.bib   # 文献ファイル（既定はスライドと同
 
 テンプレートを直すときは：
 
-1. `_extensions/econ/` を直す（ルールが変わるなら `docs/SlideRules.md` も）
+1. `_extensions/koyama/` を直す（ルールが変わるなら `docs/SlideRules.md` も）
 2. `quarto render template.qmd` で見本が崩れていないことを確認
-3. `_extensions/econ/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く
+3. `_extensions/koyama/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く

@@ -1,7 +1,7 @@
 # 応用レシピ
 
 テンプレートの既定から外れる、よくある場面の書き方。いずれも**そのデッキだけ**の変更で、
-`_extensions/econ/` の中身は書き換えない（書き換えると、テンプレートを更新したときに上書きされて消える）。
+`_extensions/koyama/` の中身は書き換えない（書き換えると、テンプレートを更新したときに上書きされて消える）。
 
 ---
 
@@ -24,18 +24,28 @@ bib-file: ../paper/refs.bib
 
 ## 3. そのデッキだけの色・命令を足す
 
-デッキのフォルダに `deck-preamble.tex` を作り、YAML で読み込む。テンプレートのプリアンブルの**後**に入るので、
-テンプレートの色（`mainblue` など）を使った定義も書ける。
+デッキのフォルダに `deck-preamble.tex` を作り、YAML で読み込む。
 
 ```yaml
 format:
-  econ-beamer:
+  koyama-beamer:
     include-in-header: deck-preamble.tex
 ```
 
 ```latex
 % deck-preamble.tex の例：論文の図と同じ区分の色
 \definecolor{sevteal}{HTML}{43B0B1}
+```
+
+注意：`deck-preamble.tex` はテンプレートのプリアンブルより**前**に入る。
+そのため、テンプレートの色（`primary` など）や命令を使う定義・テンプレートの設定を上書きしたいときは、
+`\AtBeginDocument{...}` の中に書く（本文の直前に実行されるので、テンプレートより後に効く）。
+
+```latex
+% 例：テンプレートの設定より後に効かせたいもの
+\AtBeginDocument{%
+  \colorlet{sevlight}{primary!20!white}%
+}
 ```
 
 ほかのデッキでも使えそうな命令ができたら、テンプレート本体に取り込む（[CHANGELOG](../CHANGELOG.md) に記録）。
@@ -48,7 +58,7 @@ YAML 側は空にして、`deck-preamble.tex` で直接定義する。
 ```yaml
 author: []
 format:
-  econ-beamer:
+  koyama-beamer:
     include-in-header: deck-preamble.tex
 ```
 
@@ -59,7 +69,7 @@ format:
 \AtBeginDocument{%
 \author{発表者A\textsuperscript{*}　X大学\\
 共著者B　Y大学\\
-{\footnotesize\textcolor{textgray}{＊：発表者}}}%
+{\footnotesize\textcolor{textmuted}{＊：発表者}}}%
 }
 ```
 
@@ -77,4 +87,30 @@ format:
 
 ```yaml
 output-file: Name_2026-10_seminar.pdf
+```
+
+## 7. この研究用にカラーパレットを変える
+
+YAML の `palette:` に、差し替えたい色だけを6桁の16進で書く（`#` はあってもなくてもよい）。
+書かなかった色は既定のまま。どの色を変えるかは [workflow.md](workflow.md) の 2. で決める。
+
+```yaml
+palette:
+  primary: "1F4E79"     # 構造・強調（帯・●・ナビなど）
+  accent: "C00000"      # 強調・対比の一方
+  highlight: "F2B134"   # 表・数値の注目（枠・セル背景）
+```
+
+使える色名：`textmain` `textmuted` `primary` `primarylight` `accent` `accentlight` `highlight`。
+淡い色は書かなければ自動で作られる：`primarylight`（タイトル帯・定義ボックスの地）は `primary` の 12%、
+`accentlight`（alert ブロックの地）は `accent` の 35%、`primarymid`（ナビバー・ブロック本文の地）は `primary` の 35%。
+自動の淡い色が合わないときだけ、`primarylight: "E6EEF6"` のように書いて指定する。
+色名を間違えたときは、レンダリング時に警告が出てその指定は無視される。
+
+## 8. 参考文献の文字の大きさを変える
+
+既定は 7pt（行送り 8.4pt）。変えたいときは `deck-preamble.tex` に書く：
+
+```latex
+\newcommand{\koyamaBibSize}{\fontsize{6}{7.2}\selectfont}
 ```
