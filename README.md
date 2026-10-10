@@ -1,75 +1,40 @@
 # koyama-beamer：Quarto で作る日本語 Beamer スライド
 
-Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプレート。
-経済学などの研究発表向けに、色の役割・表・数式・図のルールを決めてある。
+Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプレートです。
+経済学などの研究発表向けに、色の役割・表・数式・図のルールを決めてあります。
 
 - 出力：Beamer PDF（metropolis + 上部ナビバー、4:3、lualatex）
 - 日本語：Noto Sans JP（欧文は Noto Sans）
 - 文献：biblatex（APA）+ biber
 - 見本：[`template.pdf`](template.pdf)（どこに何を置くかを示す概念的な例）
 
-## 文書
+---
 
-| ファイル | 中身 |
-|---|---|
-| [docs/SlideRules.md](docs/SlideRules.md) | デザインのルール（色・レイアウト・箇条書き・表・図・引用） |
-| [docs/workflow.md](docs/workflow.md) | 作る順番（6段階のゲート形式）と文言・図表の作り方 |
-| [docs/recipes.md](docs/recipes.md) | 応用（Outline なし・論文と `.bib` 共有・独自の色・共著者・図表の貼り方） |
-| [docs/setup.md](docs/setup.md) | 環境構築（Quarto・TinyTeX・フォント） |
-| [CHANGELOG.md](CHANGELOG.md) | 変更履歴 |
+## はじめて使う人は
 
-## 使い方
+**[docs/getting-started.md](docs/getting-started.md) を上から順に進めてください。**
+GitHub の招待の受け方、ソフトのインストール、最初のスライドを PDF にするまでを1つずつ説明しています。
 
-初めて使うときは、先に [docs/setup.md](docs/setup.md) の環境（Quarto・TinyTeX・Noto Sans JP）を用意する。
+---
 
-### 0. このリポジトリを手元に置く（最初の1回だけ）
+## 使い方の早見（2回目以降）
 
-このリポジトリは Private なので、招待された人が手元に clone して、そのフォルダを指定して使う。
+環境（Git・Quarto・TinyTeX・Noto Sans JP）と、このリポジトリの clone が済んでいる前提です。
 
 ```bash
-git clone git@github.com:Kenshi-Koyama/koyama-beamer.git   # 好きな場所に（HTTPS なら https://github.com/Kenshi-Koyama/koyama-beamer.git）
-```
-
-テンプレートが更新されたら、clone したフォルダで `git pull` する。
-
-### 新しいスライドを作る
-
-研究ごとに `report/slide/` で作る（研究のフォルダの中に置き、図表は分析の出力から相対パスで読む）。
-
-```bash
-cd <研究のフォルダ>/report
-quarto use template <cloneしたフォルダのパス>
-# 公開後は clone せずに: quarto use template Kenshi-Koyama/koyama-beamer
-```
-
-フォルダ名を聞かれるので `slide` などと答える。中に次の3つができる：
-
-```
-report/slide/
-├── slide.qmd        ← 見本（template.qmd）がフォルダ名に改名されたもの。ここを書き換える
-├── ref.bib          ← 文献
-└── _extensions/koyama/ ← テンプレート本体（書き換えない）
-```
-
-あとは `slide.qmd` の YAML（`title` など）と本文を書き換えて、
-
-```bash
+# 新しいスライドを作る（研究のフォルダの中で）
+mkdir -p report/slide && cd report/slide
+quarto use template <koyama-beamer のパス> --no-prompt
 quarto render slide.qmd
+
+# テンプレートの更新を受け取る
+cd <koyama-beamer のパス> && git pull
 ```
 
-### 既にある `.qmd` にテンプレートだけ入れる
-
-```bash
-quarto add <cloneしたフォルダのパス>
-# 公開後は: quarto add Kenshi-Koyama/koyama-beamer
-```
-
-YAML の `format:` を次のようにする：
-
-```yaml
-format:
-  koyama-beamer: default
-```
+- できるもの：`slide.qmd`（本体。ここを書き換える）、`ref.bib`（文献）、`_extensions/koyama/`（テンプレート本体。書き換えない）
+- 既にある `.qmd` にテンプレートだけ入れるときは、その `.qmd` のフォルダで `quarto add <koyama-beamer のパス>` を打ち、
+  YAML を `format: koyama-beamer: default` にする
+- 公開（Public）後は、clone せずに `quarto use template Kenshi-Koyama/koyama-beamer` でも使える
 
 ### YAML のオプション
 
@@ -83,22 +48,33 @@ palette:                      # この研究用に色を差し替える（書い
 縦横比・エンジンなど（`aspectratio: 43`、`pdf-engine: lualatex`、`slide-level: 2`、`keep-tex: true`、
 `citeproc: false`）はテンプレートが設定するので、YAML に書かなくてよい。
 
-### 書き方の基本
+---
 
-- `#` = セクション（上部のナビバーに出る）、`##` = スライド1枚
-- **本文の先頭は必ず `#` 見出しで始める**（前に地の文やコメントがあると空のスライドが出る）
-- 細かい装飾は生 LaTeX で書く（例：`\textcolor{accent}{強調}`、`\cellcolor{highlight!25}`（表のセル）、`\srcite{key}`）。
-  部品の一覧は [SlideRules.md の 11.](docs/SlideRules.md)
+## 文書
 
-## テンプレートの更新と過去のスライド
+| ファイル | 中身 |
+|---|---|
+| [docs/getting-started.md](docs/getting-started.md) | はじめて使う人へ：インストールから最初のスライドまで、困ったとき |
+| [docs/SlideRules.md](docs/SlideRules.md) | デザインのルール（色・レイアウト・箇条書き・表・図・引用） |
+| [docs/workflow.md](docs/workflow.md) | 作る順番（6段階）、カラーパレットの決め方、文言・図表の作り方 |
+| [docs/recipes.md](docs/recipes.md) | 応用（Outline なし・論文と `.bib` 共有・色の差し替え・共著者・図表の貼り方） |
+| [CHANGELOG.md](CHANGELOG.md) | 変更履歴（更新を取り込む前に読む） |
 
-`quarto use template` / `quarto add` は、テンプレートを**各デッキのフォルダに複製**する。
-このリポジトリを更新しても、過去のデッキは作ったときの版のまま変わらない（発表済みの見た目が崩れない）。
-新しい版を既存のデッキに入れたいときだけ、clone したフォルダで `git pull` してから、
-そのデッキのフォルダで `quarto add <cloneしたフォルダのパス>` をやり直す。
+---
 
-テンプレートを直すときは：
+## テンプレートの版と過去のスライド
+
+`quarto use template` / `quarto add` は、テンプレートを**各スライドのフォルダに複製**します。
+このリポジトリが更新されても、過去のスライドは作ったときの版のまま変わりません（発表済みの見た目が崩れない）。
+作りかけのスライドに新しい版を入れる方法は [getting-started.md の 6.](docs/getting-started.md) を見てください。
+版によって命令や色の名前が変わることがあるので、取り込む前に [CHANGELOG.md](CHANGELOG.md) を確認してください。
+
+---
+
+## 管理者向け：テンプレートを直すとき
 
 1. `_extensions/koyama/` を直す（ルールが変わるなら `docs/SlideRules.md` も）
-2. `quarto render template.qmd` で見本が崩れていないことを確認
+2. `quarto render template.qmd` で見本が崩れていないことを確認する
 3. `_extensions/koyama/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く
+4. コミットしてタグ（例：`v1.2.0`）を付け、`git push origin main --tags`
+5. 使っている人に、更新したことと CHANGELOG の要点を連絡する
