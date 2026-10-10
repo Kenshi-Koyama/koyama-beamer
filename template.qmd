@@ -1,0 +1,246 @@
+---
+title: "公立図書館の開館時間延長は中高生の学習時間を増やすか"
+subtitle: "―― テンプレート見本（内容・数値はすべて架空の例）――"
+author: "発表者名"
+institute: "所属・研究会名"
+date: today
+# --- 切り替えオプション（必要なときだけ書く） ---
+# section-outline: false      # 各セクション冒頭の Outline を入れない（短い発表用）
+# bib-file: ../paper/refs.bib # 文献ファイル（既定はこのフォルダの ref.bib）
+# output-file: Name_slides.pdf
+format:
+  econ-beamer: default
+---
+
+# Introduction
+
+## 概要
+
+本研究の全体像（1枚目は RQ・データ・方法を一覧で）
+
+-   **Research Question**
+    -   図書館の開館時間を延ばすと、中高生の学習時間は増えるか？
+    -   効果は家庭に学習スペースがない生徒で大きいか？
+-   **Data**
+    -   架空の 120 市町村 $\times$ 2015〜2024 年のパネル
+-   **Method**
+    -   延長の導入時期のずれを使った差の差（DiD）＋イベントスタディ
+
+$\Rightarrow$ 最も相談したいこと：導入時期が\textcolor{mainred}{内生的}でないことをどう示すか
+
+## 先行研究：差の差の推定方法
+
+導入時期がずれる DiD では、通常の TWFE が偏りうる
+
+-   **古典的な DiD**
+    -   最低賃金の引き上げと雇用 \srcite{card1994}
+-   **導入時期がずれるときの問題**
+    -   TWFE 推定量は「既に処置された群」を対照に使う \srcite{goodmanbacon2021}
+-   **対処法**
+    -   群・時点ごとの効果を推定して集計する \srcite{callaway2021}
+    -   イベントスタディの係数を重み付けし直す \srcite{sun2021}
+
+$\Rightarrow$ 本研究は\textcolor{mainblue}{異質性に頑健な推定量}を主分析に使う
+
+## \textcolor{mainred}{本研究の位置づけ（発表者の見解）}
+
+見出しを赤にしたスライド = 論文の要約ではなく自分の見解
+
+-   既存研究は「学校の中」の学習環境に集中
+-   「学校の外」の公共空間の効果はほとんど測られていない
+
+\vspace{0.5em}
+
+\begin{keytakeaway}
+公共施設の「開いている時間」そのものが、学習の機会を左右する政策手段になりうる
+\end{keytakeaway}
+
+# Data & Design
+
+## データ
+
+3 つの架空の行政データを市町村 $\times$ 年で結合する
+
+\tlabel{Table 1:} 使用データ一覧
+
+\vspace{0.2em}
+\begin{center}\small
+\begin{tabular}{lll}
+\toprule
+データ & 提供元 & 主な内容 \\
+\midrule
+\cellcolor{mainorange!25}図書館の開館時間 & 架空の調査 & 平日の閉館時刻・延長の開始年 \\
+学習時間調査 & 架空の調査 & 中高生の平日の家庭外学習時間 \\
+人口統計 & 架空の統計 & 人口・世帯構成 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\slidenote{Note: 表・図の数値はすべて架空。セルの強調（オレンジ）は 1 表 1〜2 か所まで。}
+
+-   観察単位：市町村（$j$）$\times$ 年（$t$）
+-   処置：閉館時刻を\ybox{20 時以降}に延長
+
+## 延長の広がり
+
+::::: columns
+::: {.column width="55%"}
+\centering
+\figplaceholder[0.95\linewidth]{figures/map\_extension.png}
+
+\tlabel{Figure 1:} 延長を導入した市町村（架空）
+:::
+
+::: {.column width="45%"}
+-   延長は都市部から先に導入
+    -   $\to$ 導入時期が人口と相関？
+-   導入時期のずれ $=$ 識別の鍵
+-   左＝図、右＝読み方
+:::
+:::::
+
+## 識別の考え方
+
+導入した時期が違う市町村どうしを比べる
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[node distance=0.55cm and 0.9cm]
+  \node[box_node] (all) {120 市町村};
+  \node[box_node, below left=of all] (early) {早く導入\\(2017--2019)};
+  \node[box_node, below right=of all] (late) {遅く導入・未導入\\(2020--)};
+  \node[key_node, below=1.9cm of all] (cmp) {導入前後の変化を比較};
+  \draw[arrow] (all) -- (early);
+  \draw[arrow] (all) -- (late);
+  \draw[arrow] (early) -- (cmp);
+  \draw[arrow] (late) -- (cmp);
+\end{tikzpicture}
+\end{center}
+```
+
+\slidenote{Note: tikz の部品（box\_node = 通常、key\_node = 結論の 1 ノードだけ）。}
+
+## 推定式
+
+**Model 1**（イベントスタディ）
+
+\begin{equation}
+Y_{jt} = \sum_{k \neq -1} \beta_k \, \mathbb{1}\{t - E_j = k\} + \gamma X_{jt} + \delta_j + \lambda_t + \varepsilon_{jt}
+\end{equation}
+\begin{defbox}
+\begin{itemize}\small
+  \item[\textcolor{mainblue}{$\bullet$}] \textbf{Outcome variable}
+    \begin{itemize}
+      \item $Y_{jt}$：平日の家庭外学習時間（分）
+    \end{itemize}
+  \item[\textcolor{mainblue}{$\bullet$}] \textbf{Main explanatory variables}
+    \begin{itemize}
+      \item $E_j$：延長を導入した年。基準は\textcolor{mainred}{導入の前年}（$k=-1$）
+      \item $X_{jt}$：人口・世帯構成
+    \end{itemize}
+\end{itemize}
+\end{defbox}
+
+# Results
+
+## 主な結果
+
+延長により学習時間が増える（数値は架空）
+
+::::: columns
+::: {.column width="56%"}
+\tlabel{Table 2:} 延長の効果
+
+\vspace{0.2em}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+ & (1) TWFE & (2) CS \\
+\midrule
+延長 & 6.1$^{**}$ & \cellcolor{mainorange!25}8.4$^{***}$ \\
+     & (2.7) & (2.9) \\[0.2em]
+対象 & 全体 & 全体 \\
+N    & 1{,}200 & 1{,}200 \\
+\bottomrule
+\end{tabular}
+
+\tinynote{Note: 括弧内は市町村でクラスタした標準誤差。*** p<0.01, ** p<0.05, * p<0.1。(2) は Callaway \& Sant'Anna 推定量。}
+:::
+
+::: {.column width="44%"}
+-   どちらも\textcolor{mainblue}{正}の効果
+-   頑健な推定量で\ybox{より大きい}
+-   $\to$ TWFE は過小推定の可能性
+:::
+:::::
+
+## 異質性
+
+家庭に学習スペースがない生徒で効果が大きい（数値は架空）
+
+| 生徒の区分 | 効果（分） | 標準誤差 |
+|:-----------|:----------:|:--------:|
+| 自室あり   | 3.2        | (2.4)    |
+| 自室なし   | \textcolor{mainred}{\textbf{12.7}} | (3.8) |
+
+\slidenote{Note: 強調が不要な表は Markdown のパイプテーブルで書いてよい（booktabs 風に出力される）。}
+
+## イベントスタディ
+
+導入前は差がなく、導入後に徐々に増える
+
+\begin{center}
+\figplaceholder[0.85\linewidth]{figures/event\_study.png}
+\end{center}
+
+\tlabel{Figure 2:} 導入前後の効果（架空）\quad \slidenote{(source: 架空のデータから作成)}
+
+# Conclusion
+
+## Findings and Policy Implications
+
+-   **Findings**
+    -   延長で中高生の家庭外学習時間が増える
+    -   効果は自室のない生徒に集中
+-   **Policy Implications**
+    -   開館時間は低コストの学習支援になりうる
+    -   対象を絞るなら学習スペースの乏しい地域から
+
+## 今後の課題
+
+1.  導入時期を決めた要因の確認
+2.  学習時間以外のアウトカム（成績など）
+3.  費用対効果の試算
+
+\vspace{0.5em}
+
+\hfill\hyperlink{appendixstats}{\beamerbutton{記述統計へ $\rightarrow$}}
+
+## References {.allowframebreaks}
+
+\scriptsize
+\setlength{\bibitemsep}{2pt}
+\printbibliography[heading=none]
+
+## 記述統計（Appendix）
+
+\appendix
+\hypertarget{appendixstats}{}
+
+\tlabel{Table A1:} 記述統計量（架空）
+
+\vspace{0.2em}
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+変数 & 平均 & 標準偏差 & N \\
+\midrule
+家庭外学習時間（分） & 41.3 & 18.2 & 1{,}200 \\
+閉館時刻（時）       & 19.1 & 1.4  & 1{,}200 \\
+人口（千人）         & 86.5 & 72.9 & 1{,}200 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\slidenote{Note: 付録はページ番号にカウントされない（appendixnumberbeamer）。}

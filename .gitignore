@@ -1,0 +1,16 @@
+# Quarto / LaTeX の中間ファイル
+/template.tex
+*.log
+*.aux
+*.nav
+*.snm
+*.toc
+*.out
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.synctex.gz
+*.fdb_latexmk
+.quarto/
+*_files/
