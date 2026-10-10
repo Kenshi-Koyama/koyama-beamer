@@ -10,7 +10,8 @@
 --
 -- 本文の変換
 --   箇条書きで「太字だけの項目」の下に子の箇条書きがあるとき（例: - **Data** の下に - …）、
---   その項目は見出しとして扱い、記号（●）を付けない。
+--   その項目は見出しとして扱い、記号（●）を付けずに左端から書く。子の箇条書きは1段上げる
+--   （見出しの下に、1段目の箇条書きとして並ぶ）。
 --   項目が矢印（→ ⇒ / $\to$ $\Rightarrow$ など）で始まるときは、● の代わりにその矢印を記号の位置に置く。
 
 local palette_names = {
@@ -81,7 +82,10 @@ local function is_heading_item(item)
   while n > 0 and (inl[n].t == "Space" or inl[n].t == "SoftBreak") do n = n - 1 end
   if n ~= 1 or inl[1].t ~= "Strong" then return false end
   for i = 2, #item do
-    if item[i].t == "BulletList" or item[i].t == "OrderedList" then return true end
+    local b = item[i]
+    if b.t == "BulletList" or b.t == "OrderedList" then return true end
+    -- 子の箇条書きが先に（矢印の差し替えで）LaTeX に組み立て済みの場合
+    if b.t == "RawBlock" and b.text:match("^\\begin{itemize}") then return true end
   end
   return false
 end
@@ -119,31 +123,25 @@ local function take_arrow(item)
   return "{\\color{textmain}" .. label .. "}"
 end
 
--- 見出し項目・矢印の項目を含む箇条書きだけ、itemize を自分で組み立てて記号を差し替える
---   太字の見出し → \item[]（記号なし）／ 矢印で始まる項目 → \item[矢印]（● の代わりに矢印）
-function BulletList(el)
-  if not quarto.doc.is_format("beamer") then return nil end
+-- 項目の並びを itemize にする。矢印で始まる項目があれば、その項目だけ \item[矢印] にする
+-- （矢印の項目がなければ pandoc の通常の箇条書きのまま返す）
+local function build_list(items)
   local marks = {}
-  local changed = false
-  for i, item in ipairs(el.content) do
-    if is_heading_item(item) then
-      marks[i] = "\\item[] "
-      changed = true
+  local has_arrow = false
+  for i, item in ipairs(items) do
+    local arrow = take_arrow(item)
+    if arrow ~= nil then
+      marks[i] = "\\item[" .. arrow .. "] "
+      has_arrow = true
     else
-      local arrow = take_arrow(item)
-      if arrow ~= nil then
-        marks[i] = "\\item[" .. arrow .. "] "
-        changed = true
-      else
-        marks[i] = "\\item "
-      end
+      marks[i] = "\\item "
     end
   end
-  if not changed then return nil end
+  if not has_arrow then return { pandoc.BulletList(items) } end
 
-  local tight = el.content[1][1] ~= nil and el.content[1][1].t == "Plain"
+  local tight = items[1][1] ~= nil and items[1][1].t == "Plain"
   local blocks = { pandoc.RawBlock("latex", "\\begin{itemize}" .. (tight and "\n\\tightlist" or "")) }
-  for i, item in ipairs(el.content) do
+  for i, item in ipairs(items) do
     local first = item[1]
     if first ~= nil and (first.t == "Plain" or first.t == "Para") then
       first.content:insert(1, pandoc.RawInline("latex", marks[i]))
@@ -154,4 +152,44 @@ function BulletList(el)
   end
   table.insert(blocks, pandoc.RawBlock("latex", "\\end{itemize}"))
   return blocks
+end
+
+-- 箇条書きの記号を差し替える
+--   太字の見出し項目 → 箇条書きから外して左端の太字の行にし、その子の箇条書きを1段上げる
+--   矢印で始まる項目 → ● の代わりに矢印（build_list）
+function BulletList(el)
+  if not quarto.doc.is_format("beamer") then return nil end
+  local has_heading = false
+  for _, item in ipairs(el.content) do
+    if is_heading_item(item) then has_heading = true end
+  end
+  if not has_heading then
+    local blocks = build_list(el.content)
+    if blocks[1].t == "BulletList" then return nil end
+    return blocks
+  end
+
+  local out = {}
+  local pending = {}
+  local function flush()
+    if #pending > 0 then
+      for _, b in ipairs(build_list(pending)) do table.insert(out, b) end
+      pending = {}
+    end
+  end
+  for _, item in ipairs(el.content) do
+    if is_heading_item(item) then
+      flush()
+      -- 太字の中身を \koyamaListHead{...} で包む（プリアンブルで定義。見出しの下の空きを詰める）
+      local head = pandoc.Inlines({ pandoc.RawInline("latex", "\\koyamaListHead{") })
+      head:extend(item[1].content[1].content)
+      head:insert(pandoc.RawInline("latex", "}"))
+      table.insert(out, pandoc.Plain(head))
+      for i = 2, #item do table.insert(out, item[i]) end
+    else
+      table.insert(pending, item)
+    end
+  end
+  flush()
+  return out
 end

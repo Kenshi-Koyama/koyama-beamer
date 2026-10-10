@@ -166,6 +166,14 @@
   before skip=6pt, after skip=6pt
 }
 
+% (1b) 補足の囲み（primary の細い枠だけ、背景は塗らない）。定義・補足情報を本文と軽く区切りたいときに。
+%      使うかはスライドごとに判断する（多用しない。SlideRules の 5.）。
+\newtcolorbox{bluebox}{
+  colback=background, colframe=primary,
+  boxrule=0.6pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=4pt, after skip=4pt, fontupper=\small
+}
+
 % (2) 表・数値の「highlight の枠」強調。
 %     枠線・薄い塗りとしての使用なので、文字色ほどコントラストは問題にならない。
 %     セル背景で強調したい場合は表内で \cellcolor{highlight!25}{...} を使う。
@@ -183,6 +191,10 @@
   boxrule=1pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt,
   before skip=4pt, after skip=4pt, fontupper=\small
 }
+
+% (2c) 箇条書きの太字の見出し（● なし・左端）。koyama.lua が `- **見出し**`（子の箇条書きつき）を
+%      これに置き換える。見出しの直下の段落の空きだけ詰め、子の箇条書きとまとまって見えるようにする。
+\newcommand{\koyamaListHead}[1]{\par\textbf{#1}\par\nobreak\vspace{-\parskip}}
 
 % (3) Table / Figure ラベル（黒の太字）
 \newcommand{\tlabel}[1]{\textbf{#1}}
