@@ -20,15 +20,26 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 
 ## 使い方
 
+初めて使うときは、先に [docs/setup.md](docs/setup.md) の環境（Quarto・TinyTeX・Noto Sans JP）を用意する。
+
+### 0. このリポジトリを手元に置く（最初の1回だけ）
+
+このリポジトリは Private なので、招待された人が手元に clone して、そのフォルダを指定して使う。
+
+```bash
+git clone git@github.com:Kenshi-Koyama/koyama-beamer.git   # 好きな場所に（HTTPS なら https://github.com/Kenshi-Koyama/koyama-beamer.git）
+```
+
+テンプレートが更新されたら、clone したフォルダで `git pull` する。
+
 ### 新しいスライドを作る
 
 研究ごとに `report/slide/` で作る（研究のフォルダの中に置き、図表は分析の出力から相対パスで読む）。
 
 ```bash
 cd <研究のフォルダ>/report
-quarto use template <GitHubユーザー名>/<リポジトリ名>
-# リポジトリを手元に clone してある場合はローカルのパスでもよい
-quarto use template <このリポジトリのパス>
+quarto use template <cloneしたフォルダのパス>
+# 公開後は clone せずに: quarto use template Kenshi-Koyama/koyama-beamer
 ```
 
 フォルダ名を聞かれるので `slide` などと答える。中に次の3つができる：
@@ -49,7 +60,8 @@ quarto render slide.qmd
 ### 既にある `.qmd` にテンプレートだけ入れる
 
 ```bash
-quarto add <GitHubユーザー名>/<リポジトリ名>
+quarto add <cloneしたフォルダのパス>
+# 公開後は: quarto add Kenshi-Koyama/koyama-beamer
 ```
 
 YAML の `format:` を次のようにする：
@@ -82,7 +94,8 @@ palette:                      # この研究用に色を差し替える（書い
 
 `quarto use template` / `quarto add` は、テンプレートを**各デッキのフォルダに複製**する。
 このリポジトリを更新しても、過去のデッキは作ったときの版のまま変わらない（発表済みの見た目が崩れない）。
-新しい版を既存のデッキに入れたいときだけ、そのデッキで `quarto add` をやり直す。
+新しい版を既存のデッキに入れたいときだけ、clone したフォルダで `git pull` してから、
+そのデッキのフォルダで `quarto add <cloneしたフォルダのパス>` をやり直す。
 
 テンプレートを直すときは：
 
