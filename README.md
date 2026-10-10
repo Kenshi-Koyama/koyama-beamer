@@ -6,7 +6,7 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 - 出力：Beamer PDF（metropolis + 上部ナビバー、4:3、lualatex）
 - 日本語：Noto Sans JP（欧文は Noto Sans）
 - 文献：biblatex（APA）+ biber
-- 見本：[`template.pdf`](template.pdf)（内容・数値はすべて架空の例）
+- 見本：[`template.pdf`](template.pdf)（どこに何を置くかを示す概念的な例）
 
 ## 文書
 
