@@ -90,13 +90,7 @@
 % 反映されないときは既定のグレーのまま＝十分自然なのでそのままでよい）
 \setbeamercolor{title separator}{fg=primary}
 
-% 発表者オリジナルの意見・構成のスライドを示す強調色。
-% 注意: \setbeamercolor{frametitle}{...} を ## 見出しの前後の生LaTeXブロックで
-% 切り替える方式は、pandoc がそのブロックを「前フレームの本文末尾」に
-% 配置し、かつ beamer の frame 環境が内部でグループ化されているために
-% \end{frame} で変更が巻き戻ってしまい機能しない（要注意点）。
-% そのため、対象スライドは見出し自体を \textcolor{accent}{...} で
-% 直接色付けする方式を採用している（template.qmd の該当 ## 見出しを参照）。
+% スライドのタイトルは黒字だけ（色・強調を使わない。SlideRules の 2.）。
 
 % \appendix が part page（"Appendix" ボックス）を挿入しないよう無効化
 \AtBeginPart{}
@@ -175,7 +169,8 @@
 % (2) 表・数値の「highlight の枠」強調。
 %     枠線・薄い塗りとしての使用なので、文字色ほどコントラストは問題にならない。
 %     セル背景で強調したい場合は表内で \cellcolor{highlight!25}{...} を使う。
-%     注意: \ybox は "on line"（改行しない箱）なので短い語句専用。
+%     \ybox は表の中の値専用（文中の一部分を囲うのには使わない。SlideRules の 1.）。
+%     "on line"（改行しない箱）なので短い値にだけ使える。
 %     文章まるごと強調したいときは下の keytakeaway 環境（複数行対応）を使う。
 \newtcbox{\ybox}{on line, colframe=highlight, colback=highlight!25,
   boxrule=1pt, arc=2pt, boxsep=1.5pt, left=2pt, right=2pt, top=1pt, bottom=1pt}

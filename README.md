@@ -75,7 +75,7 @@ palette:                      # この研究用に色を差し替える（書い
 
 - `#` = セクション（上部のナビバーに出る）、`##` = スライド1枚
 - **本文の先頭は必ず `#` 見出しで始める**（前に地の文やコメントがあると空のスライドが出る）
-- 細かい装飾は生 LaTeX で書く（例：`\textcolor{accent}{強調}`、`\ybox{注目}`、`\srcite{key}`）。
+- 細かい装飾は生 LaTeX で書く（例：`\textcolor{accent}{強調}`、`\cellcolor{highlight!25}`（表のセル）、`\srcite{key}`）。
   部品の一覧は [SlideRules.md の 11.](docs/SlideRules.md)
 
 ## テンプレートの更新と過去のスライド
