@@ -1,6 +1,6 @@
-# このフォルダ（リポジトリの直下）はテンプレートではない。quarto use template <パス>/v1 か /v2 を使う
+# このフォルダ（リポジトリの直下）はテンプレートではない。quarto use template <パス>/ver1 か /ver2 を使う
 README.md
 CHANGELOG.md
 docs/
-v1/
-v2/
+ver1/
+ver2/

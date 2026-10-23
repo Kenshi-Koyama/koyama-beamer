@@ -138,12 +138,12 @@ SSH の鍵を GitHub に登録してある人は、`git clone git@github.com:Ken
 どちらか一方で確かめれば十分です（ここでは v2）。
 
 ```bash
-cd ~/koyama-beamer/v2
+cd ~/koyama-beamer/ver2
 quarto render template.qmd
 ```
 
 `template.pdf` ができ、開くと見本スライド（16:9）になっていれば準備完了です。
-v1 で確かめるときは `cd ~/koyama-beamer/v1` にします（4:3 の見本）。
+v1 で確かめるときは `cd ~/koyama-beamer/ver1` にします（4:3 の見本）。
 
 - **初めてのビルドは時間がかかります**（数分）。足りない LaTeX の部品を自動でダウンロードするためです。2回目からは速くなります。
 - うまくいかないときは、下の「[困ったとき](#困ったとき)」を見てください。
@@ -158,22 +158,22 @@ v1 で確かめるときは `cd ~/koyama-beamer/v1` にします（4:3 の見本
 
 | 版 | 縦横比 | ひとことで | ルール |
 |---|---|---|---|
-| **v2** | 16:9 | 白地で図や主張を大きく見せる。表紙に共著者・学会名。新しく作るならこちら | [v2/docs/SlideRules.md](../v2/docs/SlideRules.md) |
-| **v1** | 4:3 | 上部のナビバーで常に全体の位置を見せる。4:3 の会場や、過去の v1 のスライドの続きに | [v1/docs/SlideRules.md](../v1/docs/SlideRules.md) |
+| **v2** | 16:9 | 白地で図や主張を大きく見せる。表紙に共著者・学会名。新しく作るならこちら | [ver2/docs/SlideRules.md](../ver2/docs/SlideRules.md) |
+| **v1** | 4:3 | 上部のナビバーで常に全体の位置を見せる。4:3 の会場や、過去の v1 のスライドの続きに | [ver1/docs/SlideRules.md](../ver1/docs/SlideRules.md) |
 
 ### 5.2 スライドのフォルダを作る
 
 研究のフォルダの中に `report/slide` という空のフォルダを作り、その中でテンプレートを展開します
 （発表ごとに分けたいときは `slide` の代わりに `slide_2026-11_seminar` など）。
-**パスの最後の `/v2`・`/v1` で版を選びます。**
+**パスの最後の `/ver2`・`/ver1` で版を選びます。**
 
 ```bash
 cd <研究のフォルダ>
 mkdir -p report/slide
 cd report/slide
-quarto use template <koyama-beamer のパス>/v2 --no-prompt
-# 例（Windows）: quarto use template C:/Users/<名前>/koyama-beamer/v2 --no-prompt
-# v1 を使うとき : quarto use template C:/Users/<名前>/koyama-beamer/v1 --no-prompt
+quarto use template <koyama-beamer のパス>/ver2 --no-prompt
+# 例（Windows）: quarto use template C:/Users/<名前>/koyama-beamer/ver2 --no-prompt
+# v1 を使うとき : quarto use template C:/Users/<名前>/koyama-beamer/ver1 --no-prompt
 ```
 
 中に次の3つができます（`slide.qmd` の名前は、フォルダの名前に合わせて自動で付きます）。
@@ -206,12 +206,12 @@ quarto render slide.qmd
 - **本文の最初は必ず `#` の行から始める**（前に文章があると、空白のスライドが出る）
 - 箇条書きは `-` で始め、1段下げるときは半角スペース4つで字下げする
 - 色の強調・表・数式・図の置き方は、`slide.qmd` の見本と、使っている版の SlideRules
-  （[v2](../v2/docs/SlideRules.md) / [v1](../v1/docs/SlideRules.md)）を見る
+  （[v2](../ver2/docs/SlideRules.md) / [v1](../ver1/docs/SlideRules.md)）を見る
 - 作る順番（何から決めるか）は [workflow.md](workflow.md)
 - 文献：`ref.bib` に BibTeX 形式で書き、本文では `\textcite{キー}` や `\parencite{キー}` で引用する
 - 図：`figures` フォルダを作って画像を置き、`\includegraphics[width=\linewidth]{figures/ファイル名.png}` で貼る
 - よくある応用（目次を消す、論文と同じ `.bib` を使う、色を変える、共著者を書く）は、使っている版の recipes
-  （[v2](../v2/docs/recipes.md) / [v1](../v1/docs/recipes.md)）
+  （[v2](../ver2/docs/recipes.md) / [v1](../ver1/docs/recipes.md)）
 
 ---
 
@@ -230,7 +230,7 @@ git pull
 
 ```bash
 cd <研究のフォルダ>/report/slide
-quarto add <koyama-beamer のパス>/v2    # v1 のスライドなら /v1
+quarto add <koyama-beamer のパス>/ver2    # v1 のスライドなら /ver1
 ```
 
 そのスライドを作ったときと同じ版（`_extensions/koyama2/` なら v2、`_extensions/koyama/` なら v1）を指定します。
@@ -256,7 +256,7 @@ quarto add <koyama-beamer のパス>/v2    # v1 のスライドなら /v1
 | PDF はできるが太字にならない | `NotoSansJP-SemiBold.ttf` が入っていない（手順 2.4 の `static` をすべて入れる） |
 | 文献が `[key]` や太字のキーのまま表示される | `ref.bib` のキーの綴りの誤り、または YAML の `bib-file:` のパスの誤り |
 | 先頭に空白のスライドが出る | 本文の最初が `#` の行になっていない（手順 5.4） |
-| `quarto use template` を打っても `slide.qmd` ができない | パスの最後に `/v1` か `/v2` を付けていない（手順 5.2） |
+| `quarto use template` を打っても `slide.qmd` ができない | パスの最後に `/ver1` か `/ver2` を付けていない（手順 5.2） |
 | 更新したらエラーになった | 版で命令の名前が変わった。CHANGELOG の該当する版を見て書き換える |
 
 解決しないときは、エラーの画面（ターミナルの最後の数十行）をコピーして管理者に送ってください。

@@ -1,6 +1,6 @@
 # 応用レシピ（v2）
 
-v2（`koyama2-beamer`）で、テンプレートの既定から外れるよくある場面の書き方。v1 のものは [../../v1/docs/recipes.md](../../v1/docs/recipes.md)。
+v2（`koyama2-beamer`）で、テンプレートの既定から外れるよくある場面の書き方。v1 のものは [../../ver1/docs/recipes.md](../../ver1/docs/recipes.md)。
 いずれも**そのデッキだけ**の変更で、`_extensions/koyama2/` の中身は書き換えない
 （書き換えると、テンプレートを更新したときに上書きされて消える）。
 

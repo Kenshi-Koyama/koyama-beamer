@@ -1,6 +1,6 @@
 # スライドの作り方（進め方）
 
-デザインのルールは、使う版の SlideRules（[v2](../v2/docs/SlideRules.md) / [v1](../v1/docs/SlideRules.md)）。
+デザインのルールは、使う版の SlideRules（[v2](../ver2/docs/SlideRules.md) / [v1](../ver1/docs/SlideRules.md)）。
 ここには「どの順番で決めるか」を書く（両方の版で共通）。
 AI アシスタントと一緒に作るときも、このページを最初に読ませる。
 
@@ -39,7 +39,7 @@ AI アシスタントと一緒に作るときも、このページを最初に�
 
 決まったら：
 
-- 変えるなら YAML の `palette:` に書く（各版の recipes の 7.：[v2](../v2/docs/recipes.md) / [v1](../v1/docs/recipes.md)）。役割の分け方（構造・強調・データの注目点）は変えない
+- 変えるなら YAML の `palette:` に書く（各版の recipes の 7.：[v2](../ver2/docs/recipes.md) / [v1](../ver1/docs/recipes.md)）。役割の分け方（構造・強調・データの注目点）は変えない
 - 図を作るコードにも同じ16進の色を書く（スライドと図で色をそろえる）
 - 決めたことは研究のノートに残す（次の発表でも同じパレットを使えるように）
 

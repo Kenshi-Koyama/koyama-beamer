@@ -1,6 +1,9 @@
 # Quarto / LaTeX の中間ファイル
-/v1/template.tex
-/v2/template.tex
+/ver1/template.tex
+/ver2/template.tex
+# 見本は template_ver1.pdf / template_ver2.pdf。-o を付けずにビルドしたときの template.pdf は管理しない
+/ver1/template.pdf
+/ver2/template.pdf
 *.log
 *.aux
 *.nav

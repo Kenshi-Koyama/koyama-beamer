@@ -13,7 +13,7 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 
 ## どちらを使うか
 
-| | [v1](v1/)（4:3） | [v2](v2/)（16:9） |
+| | [v1](ver1/)（4:3） | [v2](ver2/)（16:9） |
 |---|---|---|
 | 表紙 | ![v1 の表紙](docs/images/v1-title.png) | ![v2 の表紙](docs/images/v2-title.png) |
 | 本文 | ![v1 の本文](docs/images/v1-slide.png) | ![v2 の本文](docs/images/v2-slide.png) |
@@ -24,15 +24,15 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 | 表紙 | タイトル・発表者・所属・日付 | 学会名、著者の名前と所属を横に並べる、最下部に全体の構成と枚数 |
 | 目次 | 各セクションの冒頭 | 2つ目以降のセクションの冒頭 |
 | 囲み | 定義ボックス・要点の枠など | 加えて、ラベル付きの枠（Research Question / Research Gap）・語句の下の斜線・▼ |
-| 見本（PDF） | [v1/template.pdf](v1/template.pdf) | [v2/template.pdf](v2/template.pdf) |
-| デザインのルール | [v1/docs/SlideRules.md](v1/docs/SlideRules.md) | [v2/docs/SlideRules.md](v2/docs/SlideRules.md) |
-| 応用 | [v1/docs/recipes.md](v1/docs/recipes.md) | [v2/docs/recipes.md](v2/docs/recipes.md) |
+| 見本（PDF） | [ver1/template_ver1.pdf](ver1/template_ver1.pdf) | [ver2/template_ver2.pdf](ver2/template_ver2.pdf) |
+| デザインのルール | [ver1/docs/SlideRules.md](ver1/docs/SlideRules.md) | [ver2/docs/SlideRules.md](ver2/docs/SlideRules.md) |
+| 応用 | [ver1/docs/recipes.md](ver1/docs/recipes.md) | [ver2/docs/recipes.md](ver2/docs/recipes.md) |
 
 ### 選び方の目安
 
 - **会場のスクリーンが 16:9**（最近の学会・オンライン発表）、図や主張を大きく見せたい → **v2**
 - **会場が 4:3**、またはゼミなどで、常にナビバーで全体の位置を見せたい → **v1**
-- 表紙に**共著者と所属を並べたい**、学会名・会場を入れたい → **v2**（v1 は [v1/docs/recipes.md](v1/docs/recipes.md) の 4. で手書き）
+- 表紙に**共著者と所属を並べたい**、学会名・会場を入れたい → **v2**（v1 は [ver1/docs/recipes.md](ver1/docs/recipes.md) の 4. で手書き）
 - 迷ったら **v2**（新しく作るスライドの標準）。v1 で作った過去のスライドの続きなら v1
 
 ---
@@ -40,12 +40,12 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 ## 使い方の早見（2回目以降）
 
 環境（Git・Quarto・TinyTeX・Noto Sans JP）と、このリポジトリの clone が済んでいる前提です。
-パスの最後の `/v1`・`/v2` で版を選びます。
+パスの最後の `/ver1`・`/ver2` で版を選びます。
 
 ```bash
 # 新しいスライドを作る（研究のフォルダの中で）
 mkdir -p report/slide && cd report/slide
-quarto use template <koyama-beamer のパス>/v2 --no-prompt   # v1 なら /v1
+quarto use template <koyama-beamer のパス>/ver2 --no-prompt   # v1 なら /ver1
 quarto render slide.qmd
 
 # テンプレートの更新を受け取る
@@ -54,9 +54,9 @@ cd <koyama-beamer のパス> && git pull
 
 - できるもの：`slide.qmd`（本体。ここを書き換える）、`ref.bib`（文献）、
   `_extensions/koyama2/`（v1 は `_extensions/koyama/`。テンプレート本体。書き換えない）
-- 既にある `.qmd` にテンプレートだけ入れるときは、その `.qmd` のフォルダで `quarto add <koyama-beamer のパス>/v2` を打ち、
-  YAML を `format: koyama2-beamer: default`（v1 は `/v1` と `koyama-beamer`）にする
-- 公開（Public）後は、clone せずに `quarto use template Kenshi-Koyama/koyama-beamer/v2` でも使える
+- 既にある `.qmd` にテンプレートだけ入れるときは、その `.qmd` のフォルダで `quarto add <koyama-beamer のパス>/ver2` を打ち、
+  YAML を `format: koyama2-beamer: default`（v1 は `/ver1` と `koyama-beamer`）にする
+- 公開（Public）後は、clone せずに `quarto use template Kenshi-Koyama/koyama-beamer/ver2` でも使える
 
 ### YAML のオプション（両方の版で共通）
 
@@ -68,7 +68,7 @@ palette:                      # この研究用に色を差し替える（書い
 ```
 
 v2 だけのもの（表紙）：`event:`（学会名）、`venue:`（会場）、`shorttitle:`（目次の左上）、
-`author:` の `affiliation:`・`presenter: true`（[v2/docs/recipes.md](v2/docs/recipes.md) の 4.・10.）。
+`author:` の `affiliation:`・`presenter: true`（[ver2/docs/recipes.md](ver2/docs/recipes.md) の 4.・10.）。
 
 縦横比・エンジンなど（`aspectratio`、`pdf-engine: lualatex`、`slide-level: 2`、`keep-tex: true`、
 `citeproc: false`）はテンプレートが設定するので、YAML に書かなくてよい。
@@ -85,19 +85,21 @@ koyama-beamer/
 │   ├── getting-started.md ←   はじめて使う人へ：インストールから最初のスライドまで、困ったとき
 │   ├── workflow.md        ←   作る順番（6段階）、カラーパレットの決め方、文言・図表の作り方
 │   └── images/            ←   このページの見本の画像
-├── v1/                    ← 4:3 の版（quarto use template <パス>/v1）
+├── ver1/                  ← 4:3 の版（quarto use template <パス>/ver1）
 │   ├── template.qmd       ←   見本（新しいスライドの元になる）
-│   ├── template.pdf       ←   見本の PDF
+│   ├── template_ver1.pdf  ←   見本の PDF
 │   ├── ref.bib            ←   文献の見本
 │   ├── _extensions/koyama/←   テンプレート本体（format: koyama-beamer）
 │   └── docs/              ←   SlideRules.md（デザインのルール）・recipes.md（応用）
-└── v2/                    ← 16:9 の版（quarto use template <パス>/v2）
-    ├── template.qmd / template.pdf / ref.bib
+└── ver2/                  ← 16:9 の版（quarto use template <パス>/ver2）
+    ├── template.qmd / template_ver2.pdf / ref.bib
     ├── _extensions/koyama2/   テンプレート本体（format: koyama2-beamer）
     └── docs/              ←   SlideRules.md・recipes.md
 ```
 
-`quarto use template` で配られるのは、選んだ版のフォルダの `template.qmd`・`ref.bib`・`_extensions/` だけです
+`quarto use template` で配られるのは、選んだ版のフォルダの `template.qmd`・`ref.bib`・`_extensions/` だけです。
+`template.qmd` は配るときに、使う人のフォルダの名前（例：`slide.qmd`）に自動で変わります。
+そのため `.qmd` の名前は版ごとに変えず、`template.qmd` のままにしています
 （`docs/` や見本の PDF は配られません）。
 
 ---
@@ -114,8 +116,9 @@ koyama-beamer/
 ## 管理者向け：テンプレートを直すとき
 
 1. 直す版のフォルダで、`_extensions/`（v1 は `koyama/`、v2 は `koyama2/`）を直す。ルールが変わるなら、その版の `docs/` も
-2. その版のフォルダで `quarto render template.qmd` を打ち、見本が崩れていないことを確認する。
-   見た目が変わったら、README の画像も作り直す（`pdftoppm -png -r 110 -f 3 -l 3 -singlefile v2/template.pdf docs/images/v2-slide`）
+2. その版のフォルダで `quarto render template.qmd -o template_ver2.pdf`（ver1 は `-o template_ver1.pdf`）を打ち、
+   見本が崩れていないことを確認する（`-o` を付けないと `template.pdf` ができる。これは Git の管理外）。
+   見た目が変わったら、README の画像も作り直す（`pdftoppm -png -r 110 -f 3 -l 3 -singlefile ver2/template_ver2.pdf docs/images/v2-slide`）
 3. その版の `_extensions/…/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く
 4. コミットしてタグ（例：`v1.2.0`、`v2.0.1`）を付け、`git push origin main --tags`
 5. 使っている人に、更新したことと CHANGELOG の要点を連絡する

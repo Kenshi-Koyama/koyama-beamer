@@ -1,6 +1,6 @@
 # 発表スライド作成ルール v1（Quarto → Beamer、4:3）
 
-> v1（`koyama-beamer`、4:3）のルール。v2（16:9）のルールは [../../v2/docs/SlideRules.md](../../v2/docs/SlideRules.md)。
+> v1（`koyama-beamer`、4:3）のルール。v2（16:9）のルールは [../../ver2/docs/SlideRules.md](../../ver2/docs/SlideRules.md)。
 
 > このテンプレート（`koyama-beamer`）でスライドを作るときのデザインのルール。
 > 出力は **Quarto → Beamer PDF**（lualatex / metropolis + miniframes / Noto Sans + Noto Sans JP、4:3）。

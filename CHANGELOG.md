@@ -1,22 +1,25 @@
 # 変更履歴
 
-版は、v1 が `v1/_extensions/koyama/_extension.yml`、v2 が `v2/_extensions/koyama2/_extension.yml` の `version`。
+版は、v1 が `ver1/_extensions/koyama/_extension.yml`、v2 が `ver2/_extensions/koyama2/_extension.yml` の `version`。
 v1 と v2 は別の拡張機能（`koyama-beamer` / `koyama2-beamer`）なので、版の番号もそれぞれで進む。
 
 ## リポジトリの構成の変更（2026-10-23）
 
-v1 と v2 を、リポジトリの直下のそれぞれのフォルダ（`v1/`・`v2/`）に分けた。テンプレートの中身（v1 1.1.0）は変わらない。
+v1 と v2 を、リポジトリの直下のそれぞれのフォルダ（`ver1/`・`ver2/`）に分けた。テンプレートの中身（v1 1.1.0）は変わらない。
 
-- **v1 を使うときのパスが変わった**：`quarto use template <koyama-beamer のパス>` → `<koyama-beamer のパス>/v1`。
-  作りかけの v1 のスライドに更新を入れるときも `quarto add <koyama-beamer のパス>/v1`。
+- **v1 を使うときのパスが変わった**：`quarto use template <koyama-beamer のパス>` → `<koyama-beamer のパス>/ver1`。
+  作りかけの v1 のスライドに更新を入れるときも `quarto add <koyama-beamer のパス>/ver1`。
   直下のパスのままだと、何も配られない（`slide.qmd` ができない）
+- 見本の PDF を `template_ver1.pdf`・`template_ver2.pdf` にした。`template.qmd` は名前を変えない
+  （`quarto use template` が `slide.qmd` などに自動で名前を変えるのは `template.qmd` だけのため）。
+  見本を作り直すときは `quarto render template.qmd -o template_ver2.pdf`
 - 共通の文書（getting-started・workflow）はリポジトリ直下の `docs/` に、版ごとの文書（SlideRules・recipes）は各版の `docs/` に置いた
 - README を「どちらを使うか」を選ぶ入口にし、両方の版の表紙と本文の画像（`docs/images/`）と特徴の比較を載せた
 
 ## v2 2.0.0（2026-10-23）
 
-v1 とは別に、デザインを変えた v2 を `v2/` に追加（v1 はそのまま）。`format: koyama2-beamer`、
-`quarto use template <koyama-beamer のパス>/v2` で使う。ルールは [v2/docs/SlideRules.md](v2/docs/SlideRules.md)。
+v1 とは別に、デザインを変えた v2 を `ver2/` に追加（v1 はそのまま）。`format: koyama2-beamer`、
+`quarto use template <koyama-beamer のパス>/ver2` で使う。ルールは [ver2/docs/SlideRules.md](ver2/docs/SlideRules.md)。
 
 - 縦横比を 16:9 に。図の実寸の目安を測り直した（幅 5.4 インチ、高さ 1.6〜1.9 インチまで）
 - 帯とナビバーをやめ、白地に。左上にセクション番号の四角（影つき）と黒字のタイトル、
