@@ -3,6 +3,15 @@
 版は、v1 が `ver1/_extensions/koyama/_extension.yml`、v2 が `ver2/_extensions/koyama2/_extension.yml` の `version`。
 v1 と v2 は別の拡張機能（`koyama-beamer` / `koyama2-beamer`）なので、版の番号もそれぞれで進む。
 
+## 公開（2026-10-24）
+
+リポジトリを Public にした。テンプレートの拡張機能は変わらない（v1 1.1.0・v2 2.0.0 のまま）。
+
+- GitHub のアカウント・招待・ログインなしで使える。getting-started の 1. を「GitHub の招待を受ける」から「使い方を選ぶ」
+  （Claude Code のプラグイン／clone／GitHub から直接）に変え、Private 用の認証の説明を除いた
+- clone せずに `quarto use template Kenshi-Koyama/koyama-beamer/ver2` で使える（テンプレート本体は `_extensions/Kenshi-Koyama/koyama2/` に入る）。
+  更新は `quarto add Kenshi-Koyama/koyama-beamer/ver2`
+
 ## Claude Code のプラグインとスキル（2026-10-23）
 
 テンプレートの拡張機能は変わらない（v1 1.1.0・v2 2.0.0 のまま）。

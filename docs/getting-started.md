@@ -12,7 +12,7 @@
 
 | 手順 | やること | 回数 |
 |---|---|---|
-| 1 | GitHub の招待を受ける | 最初の1回 |
+| 1 | 使い方を選ぶ（Claude Code のプラグイン／clone／GitHub から直接） | 最初の1回 |
 | 2 | ソフトを入れる（Git・Quarto・TinyTeX・フォント） | 最初の1回 |
 | 3 | テンプレートを手元に入れる（Claude Code のプラグイン、または clone） | 最初の1回 |
 | 4 | 見本をビルドして、正しく動くか確かめる | 最初の1回 |
@@ -36,16 +36,16 @@
 
 ---
 
-## 1. GitHub の招待を受ける
+## 1. 使い方を選ぶ
 
-このテンプレートは今は限られた人にだけ公開しています（Private）。使うには招待が必要です。
+テンプレートは <https://github.com/Kenshi-Koyama/koyama-beamer> で公開しています。GitHub のアカウントやログインは要りません。
+手元への入れ方は3通りあります。どれでも、手順 2 のソフトとフォントは必要です。
 
-1. GitHub のアカウントを作る（持っていなければ <https://github.com/signup>）
-2. 作ったアカウントのユーザー名を、テンプレートの管理者（小山）に伝える
-3. 招待のメールが届いたら、メールのボタンから承認する。
-   メールが見つからなければ、ログインした状態で
-   <https://github.com/Kenshi-Koyama/koyama-beamer/invitations> を開いて承認する
-4. <https://github.com/Kenshi-Koyama/koyama-beamer> が開ければ OK
+| 入れ方 | 向いている人 | 手順 |
+|---|---|---|
+| **A. Claude Code のプラグイン**（おすすめ） | VS Code などで Claude Code を使う人。「スライドを作りたい」と頼むと、版の選択から PDF の確認まで案内される | 2 → 3.1 → 5（Claude Code が進める） |
+| **B. clone** | Claude Code を使わない人。見本や文書を手元で見ながら作りたい人 | 2 → 3.2 → 4 → 5 |
+| **C. GitHub から直接** | 手元に何も置かず、スライドのフォルダにだけテンプレートを入れたい人 | 2 → 5（5.2 の「GitHub から直接」） |
 
 ---
 
@@ -54,8 +54,7 @@
 ### 2.1 Git（テンプレートを手元にコピーし、更新を受け取るため）
 
 - **Windows**：<https://git-scm.com/download/win> からインストーラーをダウンロードして実行。
-  途中の選択肢はすべて初期設定のまま「Next」で進めてよい
-  （GitHub へのログインを助ける Git Credential Manager も一緒に入ります）。
+  途中の選択肢はすべて初期設定のまま「Next」で進めてよい。
 - **macOS**：ターミナルで `git --version` と打つ。入っていなければインストールを促す画面が出るので、それに従う。
 
 確認（バージョン番号が出れば OK）：
@@ -115,6 +114,7 @@ quarto check
 ## 3. テンプレートを手元に入れる
 
 VS Code などで **Claude Code を使う人は 3.1**（おすすめ）、使わない人は 3.2 に進んでください。両方してもかまいません。
+GitHub から直接入れる人（手順 1 の C）は、3 と 4 を飛ばして 5 に進みます。
 
 ### 3.1 Claude Code を使う人：プラグインとして入れる
 
@@ -129,16 +129,8 @@ Claude Code の入力欄に、次の2行を1行ずつ打ちます。
 使うときは、研究フォルダを開いて「〇〇学会の発表スライドを作りたい」のように頼みます（`/koyama-beamer:slides` でも呼び出せます）。
 版の選択、テンプレートの導入（手順 5）、作る順番、ビルドと PDF の確認まで、Claude Code が案内します。
 
-このリポジトリは Private なので、プラグインの取得には GitHub へのログインが要ります。Claude Code は確認の画面を出さずに git を動かすので、
-次のどちらかを**先に**済ませておきます。
-
-- **SSH の鍵を GitHub に登録してある人**：そのままで動きます（鍵にパスフレーズがあるなら ssh-agent に読み込んでおく）
-- **それ以外の人**：一度、3.2 の `git clone`（https）でブラウザからログインしておくと、そのログインが使われます
-  （または GitHub CLI で `gh auth login` → `gh auth setup-git`）。そのうえで、SSH を試さずに https を使うよう設定します。
-  Windows はターミナルで `setx CLAUDE_CODE_PLUGIN_PREFER_HTTPS 1` を打ち、VS Code を開き直します
-  （macOS は `~/.zshrc` に `export CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1`）
-
-`Repository not found` や認証のエラーになったら、招待の承認（手順 1）と、上のログインを確かめてください。
+プラグインの取得には、手順 2.1 の Git を使います（GitHub のアカウントやログインは要りません）。
+うまくいかないときは、下の「[困ったとき](#困ったとき)」を見てください。
 
 ### 3.2 clone する（Claude Code を使わない人）
 
@@ -150,13 +142,12 @@ cd ~                                                        # ホームフォル
 git clone https://github.com/Kenshi-Koyama/koyama-beamer.git
 ```
 
-- 初めてのときは、ブラウザで GitHub のログイン画面が開きます。ログインすれば続きが進みます。
 - 終わると、ホームフォルダの中に `koyama-beamer` というフォルダができます。
   このフォルダの場所（パス）を、この先何度も使います。
   - Windows の例：`C:/Users/<名前>/koyama-beamer`
   - macOS の例：`/Users/<名前>/koyama-beamer`
 
-SSH の鍵を GitHub に登録してある人は、`git clone git@github.com:Kenshi-Koyama/koyama-beamer.git` でもかまいません。
+ログインは要りません。SSH の鍵を GitHub に登録してある人は、`git clone git@github.com:Kenshi-Koyama/koyama-beamer.git` でもかまいません。
 
 ---
 
@@ -205,6 +196,12 @@ quarto use template <koyama-beamer のパス>/ver2 --no-prompt
 # v1 を使うとき : quarto use template C:/Users/<名前>/koyama-beamer/ver1 --no-prompt
 ```
 
+**GitHub から直接（手順 1 の C。clone していない人）**は、パスの代わりに GitHub の場所を書きます。
+
+```bash
+quarto use template Kenshi-Koyama/koyama-beamer/ver2 --no-prompt   # v1 は .../ver1
+```
+
 中に次の3つができます（`slide.qmd` の名前は、フォルダの名前に合わせて自動で付きます）。
 
 ```text
@@ -213,6 +210,9 @@ report/slide/
 ├── ref.bib              ← 参考文献のリスト
 └── _extensions/koyama2/ ← テンプレート本体（書き換えない。v1 なら _extensions/koyama/）
 ```
+
+GitHub から直接入れたときは、テンプレート本体が `_extensions/Kenshi-Koyama/koyama2/` に入ります（使い方は同じ）。
+Claude Code のプラグイン（3.1）を入れた人は、Claude Code に頼めばこの手順を進めてくれます。
 
 ### 5.3 書き換えてビルドする
 
@@ -263,9 +263,10 @@ git pull
 ```bash
 cd <研究のフォルダ>/report/slide
 quarto add <koyama-beamer のパス>/ver2    # v1 のスライドなら /ver1
+# GitHub から直接入れたスライドなら: quarto add Kenshi-Koyama/koyama-beamer/ver2
 ```
 
-そのスライドを作ったときと同じ版（`_extensions/koyama2/` なら v2、`_extensions/koyama/` なら v1）を指定します。
+そのスライドを作ったときと同じ版（`koyama2` なら v2、`koyama` なら v1）を指定します。
 
 「`[Update] 1.0.0 -> 1.1.0`」のように表示されます。続けてよいか聞かれたら `y` で進めると入れ替わります。
 
@@ -281,8 +282,9 @@ quarto add <koyama-beamer のパス>/ver2    # v1 のスライドなら /ver1
 | 症状 | 原因と対処 |
 |---|---|
 | `git` や `quarto` が「見つからない」と言われる | ソフトを入れたあと、ターミナルを開き直していない。閉じて開き直す |
-| `git clone` で `Repository not found` や `403` | 招待をまだ承認していない（手順 1）か、別のアカウントでログインしている |
-| `git clone` で `Permission denied (publickey)` | SSH の URL を使ったが鍵が未登録。手順 3 の `https://` の URL を使う |
+| `git clone` や `quarto use template` で `Repository not found`・`404` | URL の綴り（`Kenshi-Koyama/koyama-beamer`）を確かめる |
+| `git clone` で `Permission denied (publickey)` | SSH の URL を使ったが鍵が未登録。手順 3.2 の `https://` の URL を使う |
+| `/plugin marketplace add` が SSH のところで失敗する | SSH の鍵が無い・使えない。SSH を試さず https を使うよう設定する：Windows はターミナルで `setx CLAUDE_CODE_PLUGIN_PREFER_HTTPS 1`、macOS は `~/.zshrc` に `export CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` を書き、VS Code を開き直す |
 | `quarto check` で LaTeX が見つからない | `quarto install tinytex` をもう一度打ち、ターミナルを開き直す |
 | `Font "Noto Sans JP" not found` などのエラー | フォントが入っていない、または `static` フォルダのファイルを入れていない（手順 2.4） |
 | PDF はできるが太字にならない | `NotoSansJP-SemiBold.ttf` が入っていない（手順 2.4 の `static` をすべて入れる） |

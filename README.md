@@ -23,7 +23,7 @@ VS Code などで Claude Code を使っているなら、このリポジトリ�
 ```
 
 - 使うとき：研究フォルダを開いて「〇〇学会の発表スライドを作りたい」のように頼む。`/koyama-beamer:slides` で呼び出してもよい
-- 前提：Quarto・TinyTeX・Noto Sans JP（[getting-started の 2.](docs/getting-started.md)）と、GitHub の招待（Private のため。手順は getting-started の 3.）
+- 前提：Git・Quarto・TinyTeX・Noto Sans JP（[getting-started の 2.](docs/getting-started.md)）。GitHub のアカウントやログインは要らない
 - 更新：`/plugin marketplace update koyama-beamer`。`/plugin` の **Marketplaces** で **Enable auto-update** にすると自動で届く
 
 ---
@@ -56,8 +56,8 @@ VS Code などで Claude Code を使っているなら、このリポジトリ�
 
 ## 使い方の早見（2回目以降）
 
-環境（Git・Quarto・TinyTeX・Noto Sans JP）と、このリポジトリの clone が済んでいる前提です。
-パスの最後の `/ver1`・`/ver2` で版を選びます。
+環境（Git・Quarto・TinyTeX・Noto Sans JP）が済んでいる前提です。
+パスの最後の `/ver1`・`/ver2` で版を選びます。clone していなければ、パスの代わりに `Kenshi-Koyama/koyama-beamer/ver2` と書けば GitHub から直接入ります。
 
 ```bash
 # 新しいスライドを作る（研究のフォルダの中で）
@@ -73,7 +73,7 @@ cd <koyama-beamer のパス> && git pull
   `_extensions/koyama2/`（v1 は `_extensions/koyama/`。テンプレート本体。書き換えない）
 - 既にある `.qmd` にテンプレートだけ入れるときは、その `.qmd` のフォルダで `quarto add <koyama-beamer のパス>/ver2` を打ち、
   YAML を `format: koyama2-beamer: default`（v1 は `/ver1` と `koyama-beamer`）にする
-- 公開（Public）後は、clone せずに `quarto use template Kenshi-Koyama/koyama-beamer/ver2` でも使える
+- clone せずに `quarto use template Kenshi-Koyama/koyama-beamer/ver2` でも使える（テンプレート本体は `_extensions/Kenshi-Koyama/koyama2/` に入る）
 
 ### YAML のオプション（両方の版で共通）
 
