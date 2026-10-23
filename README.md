@@ -19,7 +19,8 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 | 縦横比 | 4:3 | 16:9 |
 | 見た目 | 上部にナビバー、淡い青のタイトル帯 | 白地に番号の四角とタイトル、右上にセクション名と ○●（セクション内の位置） |
 | 色 | 青・赤・橙 | ティール・コーラル赤・橙 |
-| 表紙 | タイトル・発表者・所属 | 学会名とグラデーションの帯、著者の名前と所属を横に並べる |
+| 表紙 | タイトル・発表者・所属 | 学会名とグラデーションの帯、著者の名前と所属を横に並べる、最下部にセクションと枚数の帯 |
+| 目次 | 各セクションの冒頭 | 2つ目以降のセクションの冒頭 |
 | 置き場所 | このフォルダの直下 | [`v2/`](v2/) |
 | 見本 | [`template.pdf`](template.pdf) | [`v2/template.pdf`](v2/template.pdf) |
 | ルール | [docs/SlideRules.md](docs/SlideRules.md) | [v2/docs/SlideRules.md](v2/docs/SlideRules.md)・[v2/docs/recipes.md](v2/docs/recipes.md) |

@@ -3,7 +3,7 @@
 -- （順番を固定するため、プリアンブルは _extension.yml の include-in-header ではなくここで入れる）
 --
 -- 使えるオプション（スライドの YAML の最上位に書く）
---   section-outline: false        各セクション冒頭の目次スライドを入れない（短い発表用）
+--   section-outline: false        2つ目以降のセクション冒頭の目次を入れない（短い発表用）
 --   bib-file: ../paper/refs.bib   文献ファイル（既定は同じフォルダの ref.bib）
 --   palette:                      色の差し替え（16進。書かなかった色は既定のまま）
 --     primary: "1F4E79"

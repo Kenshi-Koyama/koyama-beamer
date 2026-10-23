@@ -265,6 +265,7 @@
 % 表紙
 %   右上：学会名（ティール）＋ ティールと赤のグラデーションの帯 ＋ 日付@会場
 %   中央：タイトル（2行まで）＋ 淡いティールの線 ＋ 著者（名前と所属を横に並べる。発表者に *）
+%   最下部：本編のセクション名と、その下にスライドの数だけ ○ を並べた帯（全体の構成と枚数の目安）
 \newcommand{\koyamaAuthor}[3]{}
 \def\koyama@drawtitlepage{%
   \begin{tikzpicture}[overlay]
@@ -303,7 +304,35 @@
           at (\koyama@ax, -58.9mm) {##2};}%
       \koyamaAuthors
     \fi
+    \koyama@titleprogress
   \end{tikzpicture}}
+
+% 表紙の最下部の帯：本編のセクションを等間隔に並べ、名前の下に、そのセクションのスライドの数だけ ○
+% （v1 の上部のナビバーと同じ形。表紙なので今の位置の ● は無い）。数は前回のコンパイルで数えたもの
+\def\koyama@titleprogress{%
+  \ifnum\koyama@nsections>0
+    \fill[primarylight] (0, -82.2mm) rectangle (\paperwidth, -\paperheight);
+    \pgfmathsetlengthmacro\koyama@colw{(\paperwidth-12.6mm)/\koyama@nsections}%
+    \koyama@i=0
+    \loop\ifnum\koyama@i<\koyama@nsections\relax
+      \advance\koyama@i by 1
+      \pgfmathsetlengthmacro\koyama@ax{6.3mm+(\the\koyama@i-1)*\koyama@colw+1.5mm}%
+      \node[anchor=west, inner sep=0pt, text=textmain, font=\fontsize{8}{9.5}\selectfont\bfseries]
+        at (\koyama@ax, -84.7mm) {\csname koyama@sname@\the\koyama@i\endcsname};
+      \expandafter\ifx\csname koyama@nsec@\the\koyama@i\endcsname\relax
+        \def\koyama@n{0}%
+      \else
+        \edef\koyama@n{\csname koyama@nsec@\the\koyama@i\endcsname}%
+      \fi
+      \ifnum\koyama@n>0
+        \pgfmathsetlengthmacro\koyama@dstep{min(1.6mm, (\koyama@colw-3mm)/\koyama@n)}%
+        \foreach \koyama@k in {1,...,\koyama@n}{%
+          \draw[textmain, line width=0.4pt]
+            (\koyama@ax+0.5mm+\koyama@k*\koyama@dstep-\koyama@dstep, -87.6mm) circle (0.5mm);
+        }%
+      \fi
+    \repeat
+  \fi}
 
 \setbeamertemplate{headline}{%
   \koyama@countframe
@@ -359,7 +388,7 @@
   \global\koyama@nonumberfalse
   \par\vskip 1mm}
 
-% 各セクションの冒頭に目次を自動で入れる。YAML で section-outline: false のときは入れない。
+% 2つ目以降の各セクションの冒頭に目次を自動で入れる。YAML で section-outline: false のときは入れない。
 % セクション名は aux に書いておき、次の実行で目次に並べる。
 \def\koyama@recordsection{%
   \koyama@startappendix
@@ -369,13 +398,15 @@
 \else
   \AtBeginSection[]{%
     \koyama@recordsection
-    \ifkoyama@appendix\else   % 付録のセクションには目次を入れない
+    % 最初のセクションと付録のセクションには目次を入れない
+    % （全体の構成は表紙の最下部の帯で見せる。目次は「次にどこへ行くか」を示すために2つ目から）
+    \ifkoyama@appendix\else\ifnum\c@section>1
     \begingroup
     \global\koyama@outlinetrue
     \begin{frame}\mbox{}\end{frame}
     \global\koyama@outlinefalse
     \endgroup
-    \fi}
+    \fi\fi}
 \fi
 
 % \appendix は「次のセクションの始まりで付録に入る」予約にする。

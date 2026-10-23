@@ -13,7 +13,7 @@ event: "学会名 第○回大会"
 venue: "会場"
 date: today
 # --- 切り替えオプション（必要なときだけ書く） ---
-# section-outline: false      # 各セクション冒頭の目次を入れない（短い発表用）
+# section-outline: false      # 2つ目以降のセクション冒頭の目次を入れない（短い発表用）
 # bib-file: ../paper/refs.bib # 文献ファイル（既定はこのフォルダの ref.bib）
 # palette:                    # この研究用に色を差し替える（書いた色だけ）
 #   primary: "1F4E79"
