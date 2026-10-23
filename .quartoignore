@@ -1,6 +1,6 @@
-docs/
+# このフォルダ（リポジトリの直下）はテンプレートではない。quarto use template <パス>/v1 か /v2 を使う
+README.md
 CHANGELOG.md
-template.pdf
-template.tex
-_review/
+docs/
+v1/
 v2/

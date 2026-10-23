@@ -1,5 +1,6 @@
 # Quarto / LaTeX の中間ファイル
-/template.tex
+/v1/template.tex
+/v2/template.tex
 *.log
 *.aux
 *.nav
@@ -15,4 +16,6 @@
 .quarto/
 *_files/
 _review/
-/v2/template.tex
+
+# エディタが作る設定ファイル（Lua の拡張機能など）
+.luarc.json

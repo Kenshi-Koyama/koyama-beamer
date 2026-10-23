@@ -1,6 +1,6 @@
 # 発表スライド作成ルール v2（Quarto → Beamer、16:9）
 
-> v2（`koyama2-beamer`）でスライドを作るときのデザインのルール。v1（4:3）のルールは [../../docs/SlideRules.md](../../docs/SlideRules.md)。
+> v2（`koyama2-beamer`）でスライドを作るときのデザインのルール。v1（4:3）のルールは [../../v1/docs/SlideRules.md](../../v1/docs/SlideRules.md)。
 > 出力は **Quarto → Beamer PDF**（lualatex / metropolis を土台に作り直したデザイン / Noto Sans + Noto Sans JP、16:9）。
 > 実装（色・部品の定義）は `_extensions/koyama2/beamer-preamble.tex`、使い方の実例は `template.qmd`。
 > 応用（色の差し替え・著者・付録など）は [recipes.md](recipes.md)、作る順番は v1 と共通の [workflow.md](../../docs/workflow.md)。

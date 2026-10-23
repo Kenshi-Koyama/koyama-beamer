@@ -1,4 +1,6 @@
-# 発表スライド作成ルール（Quarto → Beamer）
+# 発表スライド作成ルール v1（Quarto → Beamer、4:3）
+
+> v1（`koyama-beamer`、4:3）のルール。v2（16:9）のルールは [../../v2/docs/SlideRules.md](../../v2/docs/SlideRules.md)。
 
 > このテンプレート（`koyama-beamer`）でスライドを作るときのデザインのルール。
 > 出力は **Quarto → Beamer PDF**（lualatex / metropolis + miniframes / Noto Sans + Noto Sans JP、4:3）。
@@ -18,7 +20,7 @@
 
 色は**役割の名前**で呼ぶ（`primary` = 構造、`accent` = 強調、`highlight` = データの注目点）。
 下の表の「既定の色」は**既定のパレット**で、研究によって変えてよい（例：論文の図ですでに使っている色にそろえる）。
-変えるかどうかは、スライドのデザインを決める段階で毎回考える（[workflow.md](workflow.md) の 2.）。
+変えるかどうかは、スライドのデザインを決める段階で毎回考える（[workflow.md](../../docs/workflow.md) の 2.）。
 変えるときは YAML の `palette:` で色を差し替える（[recipes.md](recipes.md) の 7.）。
 色を差し替えても、名前と役割はそのままなので、このページのルールはそのまま使える。
 

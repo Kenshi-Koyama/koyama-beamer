@@ -3,82 +3,102 @@
 Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプレートです。
 経済学などの研究発表向けに、色の役割・表・数式・図のルールを決めてあります。
 
-- 出力：Beamer PDF（metropolis + 上部ナビバー、4:3、lualatex）
-- 日本語：Noto Sans JP（欧文は Noto Sans）
-- 文献：biblatex（APA）+ biber
-- 見本：[`template.pdf`](template.pdf)（どこに何を置くかを示す概念的な例）
+- デザインの違う **2つの版（v1 / v2）** があります。まず下の「どちらを使うか」で選んでください
+- どちらも日本語は Noto Sans JP（欧文は Noto Sans）、文献は biblatex（APA）+ biber、lualatex で PDF にします
+- 書き方（Markdown＋一部 LaTeX）、色の名前と役割（`primary`＝構造、`accent`＝強調、`highlight`＝データの注目点）は共通です
+
+**はじめて使う人は [docs/getting-started.md](docs/getting-started.md) を上から順に進めてください**（インストールから最初の PDF まで）。
 
 ---
 
-## 2つの版（v1 / v2）
+## どちらを使うか
 
-デザインの違う2つの版があります。どちらも同じフォント・同じ書き方（Markdown＋一部 LaTeX）で、色の名前と役割も共通です。
-
-| | v1（`koyama-beamer`） | v2（`koyama2-beamer`） |
+| | [v1](v1/)（4:3） | [v2](v2/)（16:9） |
 |---|---|---|
+| 表紙 | ![v1 の表紙](docs/images/v1-title.png) | ![v2 の表紙](docs/images/v2-title.png) |
+| 本文 | ![v1 の本文](docs/images/v1-slide.png) | ![v2 の本文](docs/images/v2-slide.png) |
 | 縦横比 | 4:3 | 16:9 |
-| 見た目 | 上部にナビバー、淡い青のタイトル帯 | 白地に番号の四角とタイトル、右上にセクション名と ○●（セクション内の位置） |
+| 今どこにいるか | 上部のナビバー（全セクションと、各スライドの ○） | 右上のセクション名と ○●（セクションの中の位置） |
+| スライドのタイトル | 淡い青の帯 | 白地に、セクション番号の四角＋黒字 |
 | 色 | 青・赤・橙 | ティール・コーラル赤・橙 |
-| 表紙 | タイトル・発表者・所属 | 学会名とグラデーションの帯、著者の名前と所属を横に並べる、最下部にセクションと枚数の帯 |
+| 表紙 | タイトル・発表者・所属・日付 | 学会名、著者の名前と所属を横に並べる、最下部に全体の構成と枚数 |
 | 目次 | 各セクションの冒頭 | 2つ目以降のセクションの冒頭 |
-| 置き場所 | このフォルダの直下 | [`v2/`](v2/) |
-| 見本 | [`template.pdf`](template.pdf) | [`v2/template.pdf`](v2/template.pdf) |
-| ルール | [docs/SlideRules.md](docs/SlideRules.md) | [v2/docs/SlideRules.md](v2/docs/SlideRules.md)・[v2/docs/recipes.md](v2/docs/recipes.md) |
+| 囲み | 定義ボックス・要点の枠など | 加えて、ラベル付きの枠（Research Question / Research Gap）・語句の下の斜線・▼ |
+| 見本（PDF） | [v1/template.pdf](v1/template.pdf) | [v2/template.pdf](v2/template.pdf) |
+| デザインのルール | [v1/docs/SlideRules.md](v1/docs/SlideRules.md) | [v2/docs/SlideRules.md](v2/docs/SlideRules.md) |
+| 応用 | [v1/docs/recipes.md](v1/docs/recipes.md) | [v2/docs/recipes.md](v2/docs/recipes.md) |
 
-v2 を使うときは、下のコマンドのパスの最後に `/v2` を付けます（`quarto use template <koyama-beamer のパス>/v2`）。
-公開（Public）後は `quarto use template Kenshi-Koyama/koyama-beamer/v2`。
+### 選び方の目安
 
----
-
-## はじめて使う人は
-
-**[docs/getting-started.md](docs/getting-started.md) を上から順に進めてください。**
-GitHub の招待の受け方、ソフトのインストール、最初のスライドを PDF にするまでを1つずつ説明しています。
+- **会場のスクリーンが 16:9**（最近の学会・オンライン発表）、図や主張を大きく見せたい → **v2**
+- **会場が 4:3**、またはゼミなどで、常にナビバーで全体の位置を見せたい → **v1**
+- 表紙に**共著者と所属を並べたい**、学会名・会場を入れたい → **v2**（v1 は [v1/docs/recipes.md](v1/docs/recipes.md) の 4. で手書き）
+- 迷ったら **v2**（新しく作るスライドの標準）。v1 で作った過去のスライドの続きなら v1
 
 ---
 
 ## 使い方の早見（2回目以降）
 
 環境（Git・Quarto・TinyTeX・Noto Sans JP）と、このリポジトリの clone が済んでいる前提です。
+パスの最後の `/v1`・`/v2` で版を選びます。
 
 ```bash
 # 新しいスライドを作る（研究のフォルダの中で）
 mkdir -p report/slide && cd report/slide
-quarto use template <koyama-beamer のパス> --no-prompt
+quarto use template <koyama-beamer のパス>/v2 --no-prompt   # v1 なら /v1
 quarto render slide.qmd
 
 # テンプレートの更新を受け取る
 cd <koyama-beamer のパス> && git pull
 ```
 
-- できるもの：`slide.qmd`（本体。ここを書き換える）、`ref.bib`（文献）、`_extensions/koyama/`（テンプレート本体。書き換えない）
-- 既にある `.qmd` にテンプレートだけ入れるときは、その `.qmd` のフォルダで `quarto add <koyama-beamer のパス>` を打ち、
-  YAML を `format: koyama-beamer: default` にする
-- 公開（Public）後は、clone せずに `quarto use template Kenshi-Koyama/koyama-beamer` でも使える
+- できるもの：`slide.qmd`（本体。ここを書き換える）、`ref.bib`（文献）、
+  `_extensions/koyama2/`（v1 は `_extensions/koyama/`。テンプレート本体。書き換えない）
+- 既にある `.qmd` にテンプレートだけ入れるときは、その `.qmd` のフォルダで `quarto add <koyama-beamer のパス>/v2` を打ち、
+  YAML を `format: koyama2-beamer: default`（v1 は `/v1` と `koyama-beamer`）にする
+- 公開（Public）後は、clone せずに `quarto use template Kenshi-Koyama/koyama-beamer/v2` でも使える
 
-### YAML のオプション
+### YAML のオプション（両方の版で共通）
 
 ```yaml
-section-outline: false        # 各セクション冒頭の Outline を入れない（短い発表用）
+section-outline: false        # セクション冒頭の目次（Outline）を入れない（短い発表用）
 bib-file: ../paper/refs.bib   # 文献ファイル（既定はスライドと同じフォルダの ref.bib）
-palette:                      # この研究用に色を差し替える（書いた色だけ。docs/recipes.md の 7.）
+palette:                      # この研究用に色を差し替える（書いた色だけ。各版の recipes.md の 7.）
   primary: "1F4E79"
 ```
 
-縦横比・エンジンなど（`aspectratio: 43`、`pdf-engine: lualatex`、`slide-level: 2`、`keep-tex: true`、
+v2 だけのもの（表紙）：`event:`（学会名）、`venue:`（会場）、`shorttitle:`（目次の左上）、
+`author:` の `affiliation:`・`presenter: true`（[v2/docs/recipes.md](v2/docs/recipes.md) の 4.・10.）。
+
+縦横比・エンジンなど（`aspectratio`、`pdf-engine: lualatex`、`slide-level: 2`、`keep-tex: true`、
 `citeproc: false`）はテンプレートが設定するので、YAML に書かなくてよい。
 
 ---
 
-## 文書
+## フォルダの構成
 
-| ファイル | 中身 |
-|---|---|
-| [docs/getting-started.md](docs/getting-started.md) | はじめて使う人へ：インストールから最初のスライドまで、困ったとき |
-| [docs/SlideRules.md](docs/SlideRules.md) | デザインのルール（色・レイアウト・箇条書き・表・図・引用） |
-| [docs/workflow.md](docs/workflow.md) | 作る順番（6段階）、カラーパレットの決め方、文言・図表の作り方 |
-| [docs/recipes.md](docs/recipes.md) | 応用（Outline なし・論文と `.bib` 共有・色の差し替え・共著者・図表の貼り方） |
-| [CHANGELOG.md](CHANGELOG.md) | 変更履歴（更新を取り込む前に読む） |
+```text
+koyama-beamer/
+├── README.md              ← このページ（どちらを使うか）
+├── CHANGELOG.md           ← 変更履歴（v1・v2 共通。更新を取り込む前に読む）
+├── docs/                  ← 両方の版で共通の文書
+│   ├── getting-started.md ←   はじめて使う人へ：インストールから最初のスライドまで、困ったとき
+│   ├── workflow.md        ←   作る順番（6段階）、カラーパレットの決め方、文言・図表の作り方
+│   └── images/            ←   このページの見本の画像
+├── v1/                    ← 4:3 の版（quarto use template <パス>/v1）
+│   ├── template.qmd       ←   見本（新しいスライドの元になる）
+│   ├── template.pdf       ←   見本の PDF
+│   ├── ref.bib            ←   文献の見本
+│   ├── _extensions/koyama/←   テンプレート本体（format: koyama-beamer）
+│   └── docs/              ←   SlideRules.md（デザインのルール）・recipes.md（応用）
+└── v2/                    ← 16:9 の版（quarto use template <パス>/v2）
+    ├── template.qmd / template.pdf / ref.bib
+    ├── _extensions/koyama2/   テンプレート本体（format: koyama2-beamer）
+    └── docs/              ←   SlideRules.md・recipes.md
+```
+
+`quarto use template` で配られるのは、選んだ版のフォルダの `template.qmd`・`ref.bib`・`_extensions/` だけです
+（`docs/` や見本の PDF は配られません）。
 
 ---
 
@@ -93,9 +113,9 @@ palette:                      # この研究用に色を差し替える（書い
 
 ## 管理者向け：テンプレートを直すとき
 
-1. `_extensions/koyama/` を直す（ルールが変わるなら `docs/SlideRules.md` も）。
-   v2 は `v2/_extensions/koyama2/` と `v2/docs/`
-2. `quarto render template.qmd`（v2 は `v2/` で `quarto render template.qmd`）で見本が崩れていないことを確認する
-3. `_extensions/koyama/_extension.yml`（v2 は `v2/_extensions/koyama2/_extension.yml`）の `version` を上げ、`CHANGELOG.md` に書く
-4. コミットしてタグ（例：`v1.2.0`）を付け、`git push origin main --tags`
+1. 直す版のフォルダで、`_extensions/`（v1 は `koyama/`、v2 は `koyama2/`）を直す。ルールが変わるなら、その版の `docs/` も
+2. その版のフォルダで `quarto render template.qmd` を打ち、見本が崩れていないことを確認する。
+   見た目が変わったら、README の画像も作り直す（`pdftoppm -png -r 110 -f 3 -l 3 -singlefile v2/template.pdf docs/images/v2-slide`）
+3. その版の `_extensions/…/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く
+4. コミットしてタグ（例：`v1.2.0`、`v2.0.1`）を付け、`git push origin main --tags`
 5. 使っている人に、更新したことと CHANGELOG の要点を連絡する

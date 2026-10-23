@@ -1,7 +1,17 @@
 # 変更履歴
 
-版は、v1 が `_extensions/koyama/_extension.yml`、v2 が `v2/_extensions/koyama2/_extension.yml` の `version`。
+版は、v1 が `v1/_extensions/koyama/_extension.yml`、v2 が `v2/_extensions/koyama2/_extension.yml` の `version`。
 v1 と v2 は別の拡張機能（`koyama-beamer` / `koyama2-beamer`）なので、版の番号もそれぞれで進む。
+
+## リポジトリの構成の変更（2026-10-23）
+
+v1 と v2 を、リポジトリの直下のそれぞれのフォルダ（`v1/`・`v2/`）に分けた。テンプレートの中身（v1 1.1.0）は変わらない。
+
+- **v1 を使うときのパスが変わった**：`quarto use template <koyama-beamer のパス>` → `<koyama-beamer のパス>/v1`。
+  作りかけの v1 のスライドに更新を入れるときも `quarto add <koyama-beamer のパス>/v1`。
+  直下のパスのままだと、何も配られない（`slide.qmd` ができない）
+- 共通の文書（getting-started・workflow）はリポジトリ直下の `docs/` に、版ごとの文書（SlideRules・recipes）は各版の `docs/` に置いた
+- README を「どちらを使うか」を選ぶ入口にし、両方の版の表紙と本文の画像（`docs/images/`）と特徴の比較を載せた
 
 ## v2 2.0.0（2026-10-23）
 
