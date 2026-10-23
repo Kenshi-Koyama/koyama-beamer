@@ -1,6 +1,30 @@
 # 変更履歴
 
-版は `_extensions/koyama/_extension.yml` の `version`。
+版は、v1 が `_extensions/koyama/_extension.yml`、v2 が `v2/_extensions/koyama2/_extension.yml` の `version`。
+v1 と v2 は別の拡張機能（`koyama-beamer` / `koyama2-beamer`）なので、版の番号もそれぞれで進む。
+
+## v2 2.0.0（2026-10-23）
+
+v1 とは別に、デザインを変えた v2 を `v2/` に追加（v1 はそのまま）。`format: koyama2-beamer`、
+`quarto use template <koyama-beamer のパス>/v2` で使う。ルールは [v2/docs/SlideRules.md](v2/docs/SlideRules.md)。
+
+- 縦横比を 16:9 に。図の実寸の目安を測り直した（幅 5.4 インチ、高さ 1.6〜1.9 インチまで）
+- 帯とナビバーをやめ、白地に。左上にセクション番号の四角（影つき）と黒字のタイトル、
+  右上にグレーのセクション名・ページ番号と、セクションの中での位置を示す ○●
+- 各セクション冒頭の目次を作り直した（「目次」とティールの縦線、番号の四角、今のセクション以外は淡く）
+- 表紙を作り直した。YAML に `event:`（学会名）・`venue:`（会場）・`shorttitle:`（目次の左上）と、
+  `author:` の `affiliation:`・`presenter: true` を追加。日付は `2026.9.5` の形
+- 色：`primary` をティール、`accent` をコーラル赤、`highlight` を橙に。`textlight`・`textfaint` を追加。
+  `highlight` は3つ目の区分として短い語の文字色に使ってよい
+- 箇条書き：1段目はティールの小さい ●、2・3段目はティールの短い横線
+- 部品を追加：`\hatch`（語句の下の斜線）、`tagbox`（Research Question / Research Gap などのラベル付きの枠）、
+  `\flowdown`（▼）、`\cardbox`（値のカード）、`\leadline`（中央ぞろえの1行）。
+  `keytakeaway` は赤い枠・太字・中央ぞろえに、`defbox` は淡いティールの地に
+- `::: defbox … :::` で、変数定義ボックスの中を Markdown で書けるようにした（`- **見出し**` は ● なしの見出しに）
+- References のスライドは、四角に番号を書かず、右上のセクション名と ○● も出さない（自動）
+- 付録：`\appendix` のあとのセクションは四角が `A1, A2 …`、右上は付録のセクションの中での ○●、目次には載らない
+- フォントは v1 と同じ（欧文の本文だけ Regular → Medium にして、和文の Medium とそろえた）。
+  タイトル・表紙・目次・右上の表示・見出し・囲みの中身は太字
 
 ## 1.1.0（2026-10-11）
 

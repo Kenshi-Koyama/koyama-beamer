@@ -1,0 +1,206 @@
+---
+title: "タイトル：英語なら2行に収まる長さまで"
+shorttitle: "短いタイトル（目次の左上）"
+author:
+  - name: 発表者名
+    affiliation: 所属
+    presenter: true
+  - name: 共著者名
+    affiliation: 所属
+  - name: 共著者名
+    affiliation: 所属
+event: "学会名 第○回大会"
+venue: "会場"
+date: today
+# --- 切り替えオプション（必要なときだけ書く） ---
+# section-outline: false      # 各セクション冒頭の目次を入れない（短い発表用）
+# bib-file: ../paper/refs.bib # 文献ファイル（既定はこのフォルダの ref.bib）
+# palette:                    # この研究用に色を差し替える（書いた色だけ）
+#   primary: "1F4E79"
+# output-file: Name_slides.pdf
+format:
+  koyama2-beamer: default
+---
+
+# イントロダクション
+
+## 背景：主張をタイトルに書く
+
+::::: columns
+::: {.column width="58%"}
+\centering
+\figplaceholder[0.95\linewidth]{figures/figure1.png}
+
+\slidenote{出典: 出典名 (2026)}
+:::
+
+::: {.column width="42%"}
+\vspace{0.6em}
+\leadline{注目してほしい数字}
+
+\leadline{\fontsize{22}{26}\selectfont\textcolor{primary}{47\%}が\textcolor{primary}{軽症}}
+
+\flowdown
+
+\leadline{\large\hatch{帰結1}}
+
+\leadline{\large\hatch{帰結2}}
+:::
+:::::
+
+\begin{keytakeaway}
+\textcolor{primary}{一方の論点}が保証されるべき一方で、\textcolor{accent}{もう一方の論点}が生じる
+\end{keytakeaway}
+
+## 問題設定と先行研究
+
+\leadline{\hatch{低い価値の需要}を抑え、\hatch[primary]{高い価値の需要}は抑えない}
+
+\flowdown
+
+-   **既存研究**
+    -   \textcolor{accent}{一律の負担}は必要な人まで除外するリスク
+        -   先行研究の知見1 \srcite{example2020}
+        -   先行研究の知見2 \srcite{example2021}
+
+\begin{tagbox}{Research Gap}
+\textcolor{primary}{状態}に基づく\textcolor{primary}{負担}（\textcolor{accent}{状態依存価格}）が\\
+スクリーニングとして有効か
+\end{tagbox}
+
+## 研究の問いと設定
+
+\begin{tagbox}[primary]{Research Question}
+\textcolor{primary}{条件A}のもとで\textcolor{accent}{追加の負担}を課すと、\\
+重い例を守ったまま、軽い例だけを抑えられるか
+\end{tagbox}
+
+\vspace{0.4em}
+
+-   **Setting**
+    -   制度変更の概要（2024年6月）
+        -   データの単位：地域 × 月のパネル
+        -   推定方法：Synthetic DiD
+    -   $\to$ 矢印で始まる項目には ● を付けない
+
+# データと実証戦略
+
+## データ
+
+\leadline{\hatch{データの名前（提供元）}}
+
+-   **地域**
+    -   処置群：地域A
+    -   対照群の候補：ほか84地域
+-   **アウトカム**
+    -   \textcolor{primary}{区分1}・\textcolor{highlight}{区分2}・\textcolor{accent}{区分3}ごとの人数
+
+## 推定式
+
+\begin{equation}
+\left(\hat{\tau}, \hat{\mu}, \hat{\alpha}, \hat{\beta}\right) = \arg\min_{\tau,\mu,\alpha,\beta} \sum_i \sum_t \left(Y_{it} - \mu - \alpha_i - \beta_t - W_{it}\tau\right)^2 \hat{\omega}_i \hat{\lambda}_t
+\end{equation}
+
+::: defbox
+-   **Outcome variable**
+    -   $Y_{it}$：地域 $i$、月 $t$ のアウトカム
+-   **Main explanatory variables**
+    -   $W_{it}$：処置後ダミー。基準は\textcolor{accent}{処置前}
+    -   $\hat{\omega}_i$：処置前のトレンドが近い地域ほど大きい \srcite{example2022}
+:::
+
+# 結果
+
+## 推定結果：全体の人数が減少
+
+\tlabel{Table 1:} 推定結果（数値は例）
+
+\vspace{0.2em}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & \textcolor{primary}{区分1} & \textcolor{highlight}{区分2} & \textcolor{accent}{区分3} \\
+\midrule
+政策効果（人/月） & \ybox{$-$146.2$^{***}$} & $-$28.4 & $-$11.9 \\
+ & (47.9) & (26.5) & (11.0) \\[0.2em]
+対照比（\%） & $-$20.3 & $-$5.3 & $-$16.5 \\
+\bottomrule
+\end{tabular}
+
+\tinynote{* p<0.10, ** p<0.05, *** p<0.01}
+\end{center}
+
+-   \textcolor{primary}{区分1}で大きく減少
+-   ほかの区分の推定値も負
+    -   統計的には有意でない
+
+## 区分ごとの平均
+
+\leadline{制度の前の平均（地域A）}
+
+\vspace{0.4em}
+\leadline{\cardbox[primary]{区分1\\3.84分}\hspace{6mm}\cardbox[highlight]{区分2\\\textcolor{accent}{4.36分}}\hspace{6mm}\cardbox[accent]{区分3\\3.79分}}
+
+\vspace{0.8em}
+
+$\Rightarrow$ 結論・含意を1行で
+
+# 結論と含意
+
+## まとめ
+
+\leadline{\hatch[primary]{主張の前半}は、\hatch{主張の後半}である可能性}
+
+-   **Findings**
+    -   \textcolor{primary}{知見1}
+        -   補足
+    -   知見2は\textcolor{accent}{強調したい語}を示唆
+-   **Policy Implications**
+    -   含意1 \srcite{example2020}
+    -   $\Rightarrow$ 含意2
+
+\hfill\hyperlink{appendixstats}{\beamerbutton{記述統計へ $\rightarrow$}}
+
+## References {.allowframebreaks}
+
+\printbibliography[heading=none]
+
+\appendix
+
+# 記述統計
+
+## 記述統計量
+
+\hypertarget{appendixstats}{}
+
+\tlabel{Table A1:} 記述統計量（数値は例）
+
+\vspace{0.2em}
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+変数 & 平均 & 標準偏差 & N \\
+\midrule
+変数1 & 0.50 & 0.20 & 1{,}000 \\
+変数2 & 12.3 & 4.56 & 1{,}000 \\
+変数3 & 78.9 & 10.1 & 1{,}000 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\slidenote{Note: \textbackslash appendix のあとのセクションは A1, A2 … になり、目次には載らない。}
+
+## 変数の定義
+
+-   **アウトカム**
+    -   変数1：定義
+-   **統制変数**
+    -   変数2：定義
+    -   変数3：定義
+
+# 頑健性の確認
+
+## 別の対照群での推定
+
+-   結果は本編と同じ方向
+-   $\to$ 対照群の選び方に左右されない

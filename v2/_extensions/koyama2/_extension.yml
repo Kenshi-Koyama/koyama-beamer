@@ -1,0 +1,15 @@
+title: Koyama Beamer v2 (Japanese)
+author: Kenshi Koyama
+version: 2.0.0
+quarto-required: ">=1.4.0"
+contributes:
+  formats:
+    beamer:
+      aspectratio: 169
+      pdf-engine: lualatex
+      slide-level: 2
+      keep-tex: true
+      citeproc: false   # 引用は biblatex に一本化（pandoc の citeproc を無効化）
+      date-format: "YYYY.M.D"
+      filters:
+        - koyama2.lua

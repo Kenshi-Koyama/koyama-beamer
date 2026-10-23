@@ -1,0 +1,572 @@
+%==================================================================
+%  Quarto -> Beamer 用プリアンブル v2（16:9。v1 はリポジトリ直下の _extensions/koyama/）
+%  koyama2.lua がこのファイルをヘッダに入れる。その直前に、YAML から作った設定マクロが入る:
+%    \koyamaNoSectionOutline … section-outline: false のとき定義される
+%    \koyamaBibFile          … 文献ファイル（bib-file:、既定 ref.bib）
+%    \koyamaEvent / \koyamaVenue … 表紙右上の学会名・会場（event: / venue:）
+%    \koyamaAuthorCount / \koyamaAuthors … 表紙の著者（author: の name / affiliation / presenter）
+%  palette: で差し替えた色の \definecolor もここより前に入る。
+%
+%  v2 のデザイン
+%    - 白地。帯やナビバーは無し。スライドのタイトルの左にセクション番号の四角（影つき）
+%    - 右上にセクション名（グレー）とページ番号。セクション名の下に、そのセクションの中での
+%      位置を ○● で示す
+%    - 文字は全部太字（Noto Sans / Noto Sans JP の Bold。\textbf は ExtraBold）
+%    - 表紙・目次・右上の表示は headline の中で、ページの左上を原点にして描く
+%==================================================================
+
+%========================
+%  パッケージ
+%========================
+\usepackage{xcolor}
+\usepackage{colortbl}      % \cellcolor（表セルの塗り）用
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, calc, positioning, patterns.meta}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty, skip=2pt, font=small}
+\usepackage{appendixnumberbeamer}
+
+%========================
+%  色の定義
+%  役割: primary（ティール）=構造＋文中強調 / accent（コーラル赤）=文中強調・対比の一方
+%        highlight（橙）=表・数値の注目点、3つ目の区分
+%  ※ \providecolor なので、YAML の palette: で先に定義された色があればそちらが使われる。
+%========================
+\providecolor{textmain}{RGB}{34,34,34}        % 本文
+\providecolor{textmuted}{RGB}{108,117,128}    % 出典 (Author, Year)・Note:
+\providecolor{textlight}{RGB}{150,150,150}    % 右上のセクション名・ページ番号・○●
+\providecolor{textfaint}{RGB}{190,190,190}    % 目次の、今のセクション以外
+\providecolor{background}{RGB}{255,255,255}
+\providecolor{primary}{RGB}{69,176,176}       % 構造の主役（四角・箇条書きの記号・目次の線）
+\providecolor{primarylight}{RGB}{217,239,239} % 変数定義ボックスの地
+\providecolor{accent}{RGB}{237,80,87}         % 文中強調・対比の一方・枠（Research Gap など）
+\providecolor{accentlight}{RGB}{250,205,207}
+\providecolor{highlight}{RGB}{232,155,0}      % 表の注目セル・3つ目の区分
+% 主色から作る中間の色
+\colorlet{primarymid}{primary!45!white}       % 四角の影
+\colorlet{primarypale}{primary!30!white}      % 目次の、今のセクション以外の四角
+\colorlet{primarypaler}{primary!13!white}     % その影
+
+%========================
+%  テーマ（metropolis を土台に、ヘッダー・表紙・目次は下で作り直す）
+%========================
+\usetheme{metropolis}
+
+\setbeamercolor{normal text}{fg=textmain, bg=background}
+\setbeamercolor{background canvas}{bg=background}
+\setbeamercolor{frametitle}{fg=textmain, bg=background}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamercolor{block title}{bg=primary, fg=white}
+\setbeamercolor{block body}{bg=primarylight}
+\setbeamercolor{block title alerted}{bg=accent, fg=white}
+\setbeamercolor{block body alerted}{bg=accentlight}
+\setbeamercolor{itemize item}{fg=primary}
+\setbeamercolor{itemize subitem}{fg=primary}
+\setbeamercolor{itemize subsubitem}{fg=primary}
+\setbeamercolor{enumerate item}{fg=primary}
+\setbeamercolor{enumerate subitem}{fg=primary}
+\setbeamercolor{button}{bg=primary, fg=white}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+\setbeamersize{text margin left=11.3mm, text margin right=11.3mm}
+% 本文は上寄せ（タイトルのすぐ下から書く）
+\makeatletter\beamer@centeredfalse\makeatother
+
+% \appendix が part page（"Appendix" ボックス）を挿入しないよう無効化
+\AtBeginPart{}
+% allowframebreaks のタイトルに付く続きの番号（i, ii …）を付けない
+\setbeamertemplate{frametitle continuation}{}
+
+%========================
+%  フォント（v1 と同じ。ただし欧文の本文は Regular ではなく Medium にして、和文の Medium とそろえる）
+%  Latin=Noto Sans（通常=Medium／太字=Bold。等幅は Noto Sans Mono）
+%  日本語=Noto Sans JP（通常=Medium／太字=SemiBold）
+%  v2 では、スライドのタイトル・表紙・目次・右上の表示・囲みの見出しと中身・箇条書きの見出しを
+%  太字にする（本文は通常の太さ）。
+%========================
+\usepackage[sfdefault, medium]{noto}
+\usepackage[match]{luatexja-fontspec}
+\setmainjfont{Noto Sans JP}[UprightFont={* Medium},BoldFont={* SemiBold}]
+\setsansjfont{Noto Sans JP}[UprightFont={* Medium},BoldFont={* SemiBold}]
+% 行送りを広めに（11pt に対して約 16.5pt）
+\renewcommand{\baselinestretch}{1.2}
+
+\setbeamerfont{frametitle}{size=\fontsize{13}{16}\selectfont, series=\bfseries}
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}
+
+%========================
+%  箇条書き
+%  1段目＝ティールの小さい ●、2・3段目＝ティールの短い横線 -
+%  2段目の記号は1段目の文字の頭にそろえる
+%========================
+\setbeamertemplate{itemize item}{\tikz[baseline={(0,-0.36em)}]\fill[primary] (0,0) circle (0.6mm);}
+\setbeamertemplate{itemize subitem}{\textcolor{primary}{\rule[0.3em]{1.3mm}{0.42mm}}}
+\setbeamertemplate{itemize subsubitem}{\textcolor{primary}{\rule[0.3em]{1.3mm}{0.42mm}}}
+\setbeamertemplate{enumerate item}{\textcolor{primary}{\insertenumlabel.}}
+\setbeamertemplate{enumerate subitem}{\textcolor{primary}{\insertenumlabel.\insertsubenumlabel}}
+\setlength\leftmargini{7.4mm}
+\setlength\leftmarginii{2.6mm}
+\setlength\leftmarginiii{3.4mm}
+\setlength\labelsep{1.2mm}
+\makeatletter
+\def\@listi{\leftmargin\leftmargini \labelsep 1.2mm
+  \topsep 3\p@ \@plus2\p@ \@minus2.5\p@ \parsep 0\p@ \itemsep 2.5\p@ \@plus1\p@ \@minus1\p@}
+\let\@listI\@listi
+\def\@listii{\leftmargin\leftmarginii \labelsep 1.4mm
+  \topsep 1\p@ \@plus1\p@ \@minus1\p@ \parsep 0\p@ \itemsep 1.5\p@ \@plus1\p@}
+\def\@listiii{\leftmargin\leftmarginiii \labelsep 1.4mm
+  \topsep 1\p@ \@plus1\p@ \@minus1\p@ \parsep 0\p@ \itemsep 1.5\p@ \@plus1\p@}
+\makeatother
+
+%========================
+%  ヘッダー・表紙・目次
+%  すべて headline の中で、ページの左上を原点に描く（headline の高さは 0）。
+%  セクション内の枚数（○● の数）と目次のセクション名は、前回の実行で aux に書いたものを読む。
+%  変わったときは "Rerun to get cross-references right" を出し、Quarto にもう一度 lualatex を回させる。
+%========================
+\makeatletter
+\providecommand{\koyamaEvent}{}
+\providecommand{\koyamaVenue}{}
+\providecommand{\koyamaAuthorCount}{0}
+\providecommand{\koyamaAuthors}{}
+\providecommand{\koyamaOutlineName}{目次}
+
+\newif\ifkoyama@titlepage
+\newif\ifkoyama@outline
+\newif\ifkoyama@changed
+\newif\ifkoyama@appendix
+\newif\ifkoyama@nonumber
+\newif\ifkoyama@nosection   % 右上のセクション名と ○● を出さない（References）
+\def\koyama@uncounted{-1}
+% \appendix の時点のセクション番号。これより後のセクションが付録（A1, A2 …）
+\def\koyama@appbase{9999}
+% スライドのタイトルに入れると、四角に番号を書かない（koyama2.lua が References のスライドに入れる）
+%  右上のセクション名と ○● も出さず、そのセクションの枚数にも数えない
+\def\koyamaNoSectionNumber{\global\koyama@nonumbertrue\global\koyama@nosectiontrue}
+\newcount\koyama@secframe   % 今のセクションの何枚目か
+\newcount\koyama@maxsec
+\newcount\koyama@i
+\def\koyama@lastframe{-1}
+\def\koyama@lastsec{-1}
+\def\koyama@nsections{0}
+
+% aux から読む（前回の実行の結果）
+\def\koyama@secframes#1#2{\expandafter\xdef\csname koyama@nsec@#1\endcsname{#2}}
+\long\def\koyama@secname#1#2{\expandafter\gdef\csname koyama@sname@#1\endcsname{#2}}
+\def\koyama@secmax#1{\xdef\koyama@nsections{#1}}
+
+\def\koyama@twodigit#1{\ifnum#1<10 0\fi\number#1}
+% 四角に書くセクション番号：本編は 01, 02 …、付録は A1, A2 …
+\def\koyama@seclabel#1{%
+  \ifnum#1>\koyama@appbase A\number\numexpr#1-\koyama@appbase\relax\else\koyama@twodigit{#1}\fi}
+
+% 新しいフレームに入ったら、セクション内の番号を数える（目次・表紙は数えない）
+\def\koyama@countframe{%
+  \ifnum\c@framenumber=\koyama@lastframe\relax\else
+    \xdef\koyama@lastframe{\the\c@framenumber}%
+    \ifnum\c@section=\koyama@lastsec\relax\else
+      \global\koyama@secframe=0
+      \xdef\koyama@lastsec{\the\c@section}%
+      \ifnum\c@section>\koyama@maxsec \global\koyama@maxsec=\c@section\fi
+    \fi
+    \ifkoyama@outline\else\ifkoyama@titlepage\else
+      \global\advance\koyama@secframe by 1
+      \expandafter\xdef\csname koyama@cur@\the\c@section\endcsname{\the\koyama@secframe}%
+    \fi\fi
+  \fi}
+
+\def\koyama@pagenumfont{\fontsize{12}{14}\selectfont\bfseries}
+\def\koyama@squarefont{\fontsize{10}{12}\selectfont\bfseries}
+
+% ページ番号（右上）
+\def\koyama@pagenumber{%
+  \node[anchor=east, inner sep=0pt, font=\koyama@pagenumfont, text=textlight]
+    (koyama@pn) at (\paperwidth-5mm, -7.2mm) {\insertframenumber};}
+
+% 通常のスライドの右上：セクション名（グレー）＋ その下に ○●（セクション内の位置）＋ ページ番号
+\def\koyama@drawheader{%
+  \begin{tikzpicture}[overlay]
+    \koyama@pagenumber
+    \ifkoyama@nosection\else\ifnum\c@section>0
+      \path let \p1 = (koyama@pn.west) in
+        coordinate (koyama@secr) at ({min(\paperwidth-12mm, \x1-2.5mm)}, -5.9mm);
+      \node[anchor=east, inner sep=0pt, text=textlight,
+            font=\fontsize{9}{11}\selectfont\bfseries\addfontfeature{LetterSpace=6}\ltjsetparameter{kanjiskip={0.12\zw}}]
+        at (koyama@secr) {\secname};
+      % ○● の数：前回の実行で数えた、このセクションの枚数（初回は今の位置まで）
+      \expandafter\ifx\csname koyama@nsec@\the\c@section\endcsname\relax
+        \edef\koyama@n{\the\koyama@secframe}%
+      \else
+        \edef\koyama@n{\csname koyama@nsec@\the\c@section\endcsname}%
+        \ifnum\koyama@n<\koyama@secframe \edef\koyama@n{\the\koyama@secframe}\fi
+      \fi
+      \koyama@i=0
+      \loop\ifnum\koyama@i<\koyama@n\relax
+        \advance\koyama@i by 1
+        \ifnum\koyama@i=\koyama@secframe
+          \fill[textlight] ($(koyama@secr)+({-(\koyama@n-\the\koyama@i)*1.9mm-0.6mm}, -3.7mm)$) circle (0.6mm);
+        \else
+          \draw[textlight, line width=0.45pt]
+            ($(koyama@secr)+({-(\koyama@n-\the\koyama@i)*1.9mm-0.6mm}, -3.7mm)$) circle (0.55mm);
+        \fi
+      \repeat
+    \fi\fi
+  \end{tikzpicture}}
+
+% 目次（各セクションの冒頭に自動で入る）
+%   左上にデッキの短いタイトル（shorttitle:、無ければ title）、左に「目次」とティールの縦線、
+%   右に番号の四角とセクション名。今のセクションは濃い四角＋黒字、それ以外は淡い四角＋薄いグレー
+%   並べるのは本編のセクションだけ（付録のセクションは載せない）
+\def\koyama@drawoutline{%
+  \begin{tikzpicture}[overlay]
+    \node[anchor=west, inner sep=0pt, font=\fontsize{13}{16}\selectfont\bfseries, text=textmain]
+      at (6.3mm, -7.2mm) {\insertshorttitle};
+    \koyama@pagenumber
+    \node[anchor=west, inner sep=0pt, font=\fontsize{13.5}{16}\selectfont\bfseries, text=textmain]
+      at (11.3mm, -16.2mm) {\koyamaOutlineName};
+    \draw[primary, line width=1.3pt] (26.6mm, -13mm) -- (26.6mm, -84.2mm);
+    \ifnum\koyama@nsections>1
+      \pgfmathsetlengthmacro\koyama@step{min(15.45mm, 61.8mm/(\koyama@nsections-1))}%
+    \else
+      \def\koyama@step{0pt}%
+    \fi
+    \pgfmathsetlengthmacro\koyama@sq{min(8.2mm, 0.8*\koyama@step+(\koyama@step==0)*8.2mm)}%
+    \koyama@i=0
+    \loop\ifnum\koyama@i<\koyama@nsections\relax
+      \advance\koyama@i by 1
+      \pgfmathsetlengthmacro\koyama@y{-17.1mm-(\the\koyama@i-1)*\koyama@step}%
+      \ifnum\koyama@i=\c@section
+        \def\koyama@sqc{primary}\def\koyama@shc{primarymid}\def\koyama@txc{textmain}%
+      \else
+        \def\koyama@sqc{primarypale}\def\koyama@shc{primarypaler}\def\koyama@txc{textfaint}%
+      \fi
+      \fill[\koyama@shc] (33.2mm+0.12*\koyama@sq, \koyama@y+0.5*\koyama@sq-0.14*\koyama@sq)
+        rectangle ++(\koyama@sq, -\koyama@sq);
+      \fill[\koyama@sqc] (33.2mm, \koyama@y+0.5*\koyama@sq) rectangle ++(\koyama@sq, -\koyama@sq);
+      \node[inner sep=0pt, text=white, font=\koyama@squarefont]
+        at (33.2mm+0.5*\koyama@sq, \koyama@y) {\koyama@twodigit{\koyama@i}};
+      \node[anchor=west, inner sep=0pt, text=\koyama@txc, font=\fontsize{13}{16}\selectfont\bfseries]
+        at (47.3mm, \koyama@y) {\csname koyama@sname@\the\koyama@i\endcsname};
+    \repeat
+  \end{tikzpicture}}
+
+% 表紙
+%   右上：学会名（ティール）＋ ティールと赤のグラデーションの帯 ＋ 日付@会場
+%   中央：タイトル（2行まで）＋ 淡いティールの線 ＋ 著者（名前と所属を横に並べる。発表者に *）
+\newcommand{\koyamaAuthor}[3]{}
+\def\koyama@drawtitlepage{%
+  \begin{tikzpicture}[overlay]
+    \ifx\koyamaEvent\@empty
+      \def\koyama@datey{-7.5mm}%
+    \else
+      \def\koyama@datey{-16.6mm}%
+      \node[anchor=east, inner sep=0pt, text=primary, font=\fontsize{11.5}{14}\selectfont\bfseries]
+        at (\paperwidth-8mm, -7.4mm) {\koyamaEvent};
+      \shade[left color=white, right color=primary]
+        (\paperwidth-65.3mm, -11.0mm) rectangle (\paperwidth-6.4mm, -11.8mm);
+      \shade[left color=white, right color=accent]
+        (\paperwidth-65.3mm, -11.8mm) rectangle (\paperwidth-6.4mm, -12.9mm);
+    \fi
+    \node[anchor=east, inner sep=0pt, text=textmain, font=\fontsize{11}{13}\selectfont\bfseries]
+      at (\paperwidth-8mm, \koyama@datey)
+      {\insertdate\ifx\koyamaVenue\@empty\else\ifx\beamer@date\@empty\else @\fi\koyamaVenue\fi};
+    \pgfmathsetlengthmacro\koyama@tw{\paperwidth-24mm}%
+    \node[anchor=south, inner sep=0pt, align=flush center, text width=\koyama@tw, text=textmain,
+          font=\fontsize{14.5}{24}\selectfont\bfseries]
+      at (0.5\paperwidth, -43.3mm)
+      {\inserttitle\ifx\beamer@subtitle\@empty\else\\{\fontsize{12}{20}\selectfont\insertsubtitle}\fi};
+    \draw[primary!65!white, line width=0.9pt] (13.8mm, -44.8mm) -- (\paperwidth-13.8mm, -44.8mm);
+    \ifnum\koyamaAuthorCount>0
+      \koyama@i=0
+      \pgfmathsetlengthmacro\koyama@colw{(\paperwidth-27.6mm)/\koyamaAuthorCount}%
+      \pgfmathsetlengthmacro\koyama@tw{\koyama@colw-2mm}%
+      \def\koyamaAuthor##1##2##3{%
+        \advance\koyama@i by 1
+        \pgfmathsetlengthmacro\koyama@ax{13.8mm+(\the\koyama@i-0.5)*\koyama@colw}%
+        \node[anchor=south, inner sep=0pt, align=flush center, text width=\koyama@tw,
+              font=\fontsize{12}{14}\selectfont\bfseries, text=textmain]
+          at (\koyama@ax, -58.0mm) {##1\ifnum##3=1 *\fi};
+        \node[anchor=north, inner sep=0pt, align=flush center, text width=\koyama@tw,
+              font=\fontsize{8.5}{10.5}\selectfont\bfseries, text=textmain]
+          at (\koyama@ax, -58.9mm) {##2};}%
+      \koyamaAuthors
+    \fi
+  \end{tikzpicture}}
+
+\setbeamertemplate{headline}{%
+  \koyama@countframe
+  % References など右上を出さないスライドは、フレームの始めに数えた分を戻す（1枚につき1回）
+  \ifkoyama@nosection
+    \ifnum\c@framenumber=\koyama@uncounted\relax\else
+      \xdef\koyama@uncounted{\the\c@framenumber}%
+      \global\advance\koyama@secframe by -1
+      \expandafter\xdef\csname koyama@cur@\the\c@section\endcsname{\the\koyama@secframe}%
+    \fi
+  \fi
+  \vbox to 0pt{\hbox to 0pt{%
+    \ifkoyama@titlepage
+      \koyama@drawtitlepage
+      \global\koyama@titlepagefalse
+    \else\ifkoyama@outline
+      \koyama@drawoutline
+    \else
+      \koyama@drawheader
+    \fi\fi
+    \hss}\vss}%
+  \global\koyama@nosectionfalse}
+
+% 表紙のフレーム：中身は headline で描くので、ここでは印を付けるだけ
+\setbeamertemplate{title page}{\global\koyama@titlepagetrue\vfill\mbox{}}
+
+% スライドのタイトル：左にセクション番号の四角（影つき）、続けて黒字のタイトル
+% （beamer はタイトル欄を本文の左余白の位置から組むので、その分だけ左へ戻してページの左端を原点にする）
+%   References のスライドは四角だけ（番号なし）。付録のセクションは A1, A2 …
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  % タイトルの中の \koyamaNoSectionNumber を先に効かせるため、いったん組んで捨てる
+  \setbox\z@\vbox{\hsize=10cm \insertframetitle}%
+  \hbox to\textwidth{\hskip-\beamer@leftmargin
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth, -14mm);
+    \ifnum\c@section>0
+      \fill[primarymid] (7.3mm, -4.7mm) rectangle ++(8.2mm, -8.2mm);
+      \fill[primary] (6.3mm, -3.5mm) rectangle ++(8.2mm, -8.2mm);
+      \ifkoyama@nonumber\else
+        \node[inner sep=0pt, text=white, font=\koyama@squarefont] at (10.4mm, -7.6mm)
+          {\koyama@seclabel{\c@section}};
+      \fi
+      \def\koyama@tx{18.3mm}%
+    \else
+      \def\koyama@tx{6.3mm}%
+    \fi
+    \pgfmathsetlengthmacro\koyama@tw{\paperwidth-\koyama@tx-42mm}%
+    \node[anchor=west, inner sep=0pt, align=flush left, text width=\koyama@tw,
+          text=textmain, font=\usebeamerfont{frametitle}]
+      at (\koyama@tx, -7.6mm) {\insertframetitle};
+  \end{tikzpicture}\hss}%
+  \global\koyama@nonumberfalse
+  \par\vskip 1mm}
+
+% 各セクションの冒頭に目次を自動で入れる。YAML で section-outline: false のときは入れない。
+% セクション名は aux に書いておき、次の実行で目次に並べる。
+\def\koyama@recordsection{%
+  \koyama@startappendix
+  \immediate\write\@auxout{\string\koyama@secname{\the\c@section}{\unexpanded\expandafter{\secname}}}}
+\ifdefined\koyamaNoSectionOutline
+  \AtBeginSection[]{\koyama@recordsection}
+\else
+  \AtBeginSection[]{%
+    \koyama@recordsection
+    \ifkoyama@appendix\else   % 付録のセクションには目次を入れない
+    \begingroup
+    \global\koyama@outlinetrue
+    \begin{frame}\mbox{}\end{frame}
+    \global\koyama@outlinefalse
+    \endgroup
+    \fi}
+\fi
+
+% \appendix は「次のセクションの始まりで付録に入る」予約にする。
+% Quarto では \appendix が直前のスライド（References など）の中に入るので、その場で
+% appendixnumberbeamer の \appendix を動かすと、そのスライドのページ番号が 0 になってしまう。
+% 付録に入るときに、付録が始まる前のセクション番号を覚える（それより後が A1, A2 …）。
+\newif\ifkoyama@appendixpending
+\let\koyama@origappendix\appendix
+\def\appendix{\global\koyama@appendixpendingtrue}
+\def\koyama@startappendix{%
+  \ifkoyama@appendixpending
+    \global\koyama@appendixpendingfalse
+    \global\koyama@appendixtrue
+    \xdef\koyama@appbase{\the\numexpr\c@section-1\relax}%
+    \koyama@origappendix
+  \fi}
+
+% 今回数えた枚数を aux に書く。前回と違えば、もう一度コンパイルさせる
+\AtEndDocument{%
+  \koyama@i=0
+  \loop\ifnum\koyama@i<\numexpr\koyama@maxsec+1\relax
+    \expandafter\ifx\csname koyama@cur@\the\koyama@i\endcsname\relax\else
+      \immediate\write\@auxout{\string\koyama@secframes{\the\koyama@i}{\csname koyama@cur@\the\koyama@i\endcsname}}%
+      \expandafter\ifx\csname koyama@nsec@\the\koyama@i\endcsname\relax
+        \koyama@changedtrue
+      \else
+        \ifnum\csname koyama@nsec@\the\koyama@i\endcsname=\csname koyama@cur@\the\koyama@i\endcsname\relax
+        \else\koyama@changedtrue\fi
+      \fi
+    \fi
+    \advance\koyama@i by 1
+  \repeat
+  % 目次に並べる本編のセクションの数（付録があれば、付録が始まる前まで）
+  \ifkoyama@appendix \koyama@maxsec=\koyama@appbase\relax\fi
+  \immediate\write\@auxout{\string\koyama@secmax{\the\koyama@maxsec}}%
+  \ifnum\koyama@nsections=\koyama@maxsec\relax\else\koyama@changedtrue\fi
+  \ifkoyama@changed
+    \@latex@warning@no@line{koyama2: section frames changed. Rerun to get cross-references right}%
+  \fi}
+\makeatother
+
+%========================
+%  tikz スタイル（決定木・DAG 用）
+%========================
+\tikzset{
+  dag_node/.style={
+    draw=textmain, ellipse,
+    minimum width=2.0cm, minimum height=1.0cm,
+    thick, align=center, fill=background, font=\small
+  },
+  box_node/.style={          % 通常のノード（ティールの枠）
+    draw=primary, line width=1.1pt, fill=background,
+    minimum width=2.6cm, minimum height=0.9cm, align=center, font=\small
+  },
+  key_node/.style={          % 強調したい結論ノード（赤の枠）
+    draw=accent, line width=1.1pt, fill=background,
+    minimum width=2.6cm, minimum height=0.9cm, align=center, font=\small
+  },
+  arrow/.style={
+    ->, >=Stealth, line width=1.0pt, draw=textlight,
+    shorten >=2pt, shorten <=2pt
+  }
+}
+
+%========================
+%  カスタム部品
+%  囲み（defbox・tagbox・keytakeaway・bluebox）は本文の左右の余白より少し外まで広げる
+%========================
+% (1) 数式の変数定義ゾーン（淡いティールの地、枠なし）
+%     Markdown で書くときは ::: defbox … :::（中の `- **見出し**` は ● なしの見出しになる）
+\newtcolorbox{defbox}{
+  enhanced, sharp corners, colback=primarylight, colframe=primarylight, boxrule=0pt,
+  grow to left by=4.7mm, grow to right by=4.7mm,
+  left=5mm, right=5mm, top=3mm, bottom=3mm, before skip=6pt, after skip=6pt
+}
+
+% (1b) 補足の囲み（primary の細い枠だけ）。ふだんは使わない
+\newtcolorbox{bluebox}{
+  colback=background, colframe=primary,
+  boxrule=0.8pt, arc=1.5mm, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=4pt, after skip=4pt, fontupper=\small
+}
+
+% (1c) 見出しつきの囲み（Research Question / Research Gap など）
+%      左上に丸いラベル、枠の中は中央ぞろえ。色は accent（既定）か primary
+%      使い方: \begin{tagbox}{Research Gap} … \end{tagbox}
+%              \begin{tagbox}[primary]{Research Question} … \end{tagbox}
+\newtcolorbox{tagbox}[2][accent]{
+  enhanced, colback=background, colframe=#1, boxrule=1.1pt, arc=1.8mm,
+  grow to left by=4.7mm, grow to right by=4.7mm,
+  halign=flush center, left=6mm, right=6mm, top=3.2mm, bottom=3.2mm,
+  before skip=10pt, after skip=8pt, fontupper=\bfseries,
+  title={#2}, coltitle=white, fonttitle=\fontsize{11.5}{13}\selectfont\bfseries,
+  % ラベルは枠の上の線に半分かかる位置に。yshift*（上の余白をラベルの分だけ自動で足す）ではなく
+  % yshift にして、枠の線から文字までの空きを上下で同じ（top=bottom）にする
+  attach boxed title to top left={yshift=-\tcboxedtitleheight/2},
+  boxed title style={colback=#1, colframe=#1, boxrule=0pt, arc=2.6mm,
+    left=4mm, right=4mm, top=0.5mm, bottom=0.5mm}
+}
+
+% (2) 表の中の値の「highlight の枠」強調（文中には使わない）
+\newtcbox{\ybox}{on line, colframe=highlight, colback=highlight!20,
+  boxrule=1pt, arc=2pt, boxsep=1.5pt, left=2pt, right=2pt, top=1pt, bottom=1pt}
+
+% (2b) 核心の一文（赤い枠・中央ぞろえ・少し大きく）。1デッキで数回まで
+%      使い方: \begin{keytakeaway} … \end{keytakeaway}  /  \begin{keytakeaway}[primary] … \end{keytakeaway}
+\newtcolorbox{keytakeaway}[1][accent]{
+  enhanced, colback=background, colframe=#1, boxrule=1.1pt, arc=0.6mm,
+  grow to left by=4.7mm, grow to right by=4.7mm,
+  halign=flush center, valign=center, left=4mm, right=4mm, top=2.6mm, bottom=2.6mm,
+  before skip=8pt, after skip=6pt, fontupper=\fontsize{12.5}{16}\selectfont\bfseries
+}
+
+% (2c) 斜線のマーカー（語句の下半分に斜線を引く）。文中のキーワード・リード文の要点に
+%      使い方: \hatch{語句}（accent）/ \hatch[primary]{語句}。行をまたぐ語句には使えない
+\newcommand{\hatch}[2][accent]{%
+  \tikz[baseline=(koyamahatch.base)]{%
+    \node[inner sep=0pt, outer sep=0pt, anchor=base west] (koyamahatch) at (0,0) {\phantom{#2}};
+    \fill[overlay, pattern={Lines[angle=45, distance=1.7pt, line width=0.7pt]}, pattern color=#1!70!white]
+      ([xshift=-0.8mm, yshift=-0.2em]koyamahatch.base west) rectangle
+      ([xshift=0.8mm, yshift=0.36em]koyamahatch.base east);
+    \node[inner sep=0pt, outer sep=0pt, anchor=base west] at (0,0) {#2};}}
+
+% (2c') 中央ぞろえの1行（リード文・図の見出しなど）。使い方: \leadline{…}
+\newcommand{\leadline}[1]{\par{\centering #1\par}\vspace{2pt}}
+
+% (2d) 流れの下向き三角（▼）。前の内容から次の内容へ（中央に置く）
+\newcommand{\flowdown}{%
+  \par\vspace{2pt}{\centering\tikz\fill[textmain!90] (0,0) -- (5mm,0) -- (2.5mm,-1.9mm) -- cycle;\par}\vspace{2pt}}
+
+% (2e) 値のカード（角の丸い色枠）。区分ごとの値を並べるときに
+%      使い方: \cardbox[primary]{軽症\\3.84分}  \cardbox[highlight]{…}  \cardbox[accent]{…}
+\newtcbox{\koyamacard}[1][primary]{on line, enhanced, colback=background, colframe=#1,
+  boxrule=1.2pt, arc=1.5mm, left=5mm, right=5mm, top=1.5mm, bottom=1.5mm}
+\newcommand{\cardbox}[2][primary]{\koyamacard[#1]{\begin{tabular}{@{}c@{}}#2\end{tabular}}}
+
+% (2f) 箇条書きの太字の見出し（● なし・左端）。koyama2.lua が `- **見出し**`（子の箇条書きつき）を
+%      これに置き換える。2つ目以降の見出しの前には \koyamaListGap で空きを入れる。
+\newcommand{\koyamaListHead}[1]{\par\textbf{#1}\par\nobreak\vspace{-\parskip}}
+\newcommand{\koyamaListGap}{\par\vspace{0.7em}}
+
+% (3) Table / Figure ラベル（黒）
+\newcommand{\tlabel}[1]{\textbf{#1}}
+
+% (3b) 図表下の注釈・箇条書き項目の出典（グレー・小さめ）
+\newcommand{\slidenote}[1]{{\footnotesize\color{textmuted}#1}}
+
+% (3c) \slidenote よりさらに小さい注（表の下のSE・有意水準の注記など）
+\newcommand{\tinynote}[1]{{\scriptsize\color{textmuted}#1}}
+
+% (3d) 箇条書き項目の出典。(Author, Year) が途中で折り返さないよう \mbox で包む
+\newcommand{\srcite}[1]{\slidenote{\mbox{\parencite{#1}}}}
+
+% (4) 図のプレースホルダ（実画像が未配置でもレンダリング可能にする）
+\newcommand{\figplaceholder}[2][7cm]{%
+  \begin{tikzpicture}
+    \node[draw=textlight, dashed, rounded corners=4pt, fill=black!2,
+          minimum width=#1, minimum height=3.4cm,
+          align=center, text=textlight, font=\small]
+      {図をここに配置\\[2pt] \ttfamily #2};
+  \end{tikzpicture}}
+
+%========================
+%  参考文献（biblatex / APA + biber）
+%========================
+\usepackage{csquotes}
+\usepackage[style=apa, backend=biber]{biblatex}
+\DeclareLanguageMapping{english}{english-apa}
+\providecommand{\koyamaBibFile}{ref.bib}
+\addbibresource{\koyamaBibFile}
+\AtEveryBibitem{
+  \clearfield{doi}\clearfield{url}\clearfield{isbn}\clearfield{issn}
+  \clearfield{note}\clearfield{month}\clearfield{issue}\clearfield{number}
+  \clearfield{pmid}\clearfield{pmcid}\clearfield{abstract}
+}
+% 文献リストは小さく・行間を詰めて、1枚になるべく多く載せる（デッキ側で \koyamaBibSize を先に定義すれば変えられる）
+\providecommand{\koyamaBibSize}{\fontsize{7}{8.4}\selectfont}
+\renewcommand*{\bibfont}{\koyamaBibSize}
+\setbeamerfont{bibliography entry author}{size=\koyamaBibSize}
+\setbeamerfont{bibliography entry title}{size=\koyamaBibSize, series=\mdseries}
+\setbeamerfont{bibliography entry location}{size=\koyamaBibSize}
+\setbeamerfont{bibliography entry note}{size=\koyamaBibSize}
+\setbeamercolor{bibliography entry author}{fg=textmain}
+\setbeamercolor{bibliography entry title}{fg=textmain}
+\setbeamercolor{bibliography entry location}{fg=textmain}
+\setbeamercolor{bibliography entry note}{fg=textmain}
+\setlength{\bibitemsep}{1pt}
+\setlength{\bibhang}{1.5em}
+\setbeamertemplate{bibliography item}{}
+
+%========================
+%  ハイパーリンク
+%========================
+\hypersetup{colorlinks=true, urlcolor=primary, linkcolor=textmain, citecolor=textmuted}

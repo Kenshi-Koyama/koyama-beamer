@@ -10,6 +10,25 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 
 ---
 
+## 2つの版（v1 / v2）
+
+デザインの違う2つの版があります。どちらも同じフォント・同じ書き方（Markdown＋一部 LaTeX）で、色の名前と役割も共通です。
+
+| | v1（`koyama-beamer`） | v2（`koyama2-beamer`） |
+|---|---|---|
+| 縦横比 | 4:3 | 16:9 |
+| 見た目 | 上部にナビバー、淡い青のタイトル帯 | 白地に番号の四角とタイトル、右上にセクション名と ○●（セクション内の位置） |
+| 色 | 青・赤・橙 | ティール・コーラル赤・橙 |
+| 表紙 | タイトル・発表者・所属 | 学会名とグラデーションの帯、著者の名前と所属を横に並べる |
+| 置き場所 | このフォルダの直下 | [`v2/`](v2/) |
+| 見本 | [`template.pdf`](template.pdf) | [`v2/template.pdf`](v2/template.pdf) |
+| ルール | [docs/SlideRules.md](docs/SlideRules.md) | [v2/docs/SlideRules.md](v2/docs/SlideRules.md)・[v2/docs/recipes.md](v2/docs/recipes.md) |
+
+v2 を使うときは、下のコマンドのパスの最後に `/v2` を付けます（`quarto use template <koyama-beamer のパス>/v2`）。
+公開（Public）後は `quarto use template Kenshi-Koyama/koyama-beamer/v2`。
+
+---
+
 ## はじめて使う人は
 
 **[docs/getting-started.md](docs/getting-started.md) を上から順に進めてください。**
@@ -73,8 +92,9 @@ palette:                      # この研究用に色を差し替える（書い
 
 ## 管理者向け：テンプレートを直すとき
 
-1. `_extensions/koyama/` を直す（ルールが変わるなら `docs/SlideRules.md` も）
-2. `quarto render template.qmd` で見本が崩れていないことを確認する
-3. `_extensions/koyama/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く
+1. `_extensions/koyama/` を直す（ルールが変わるなら `docs/SlideRules.md` も）。
+   v2 は `v2/_extensions/koyama2/` と `v2/docs/`
+2. `quarto render template.qmd`（v2 は `v2/` で `quarto render template.qmd`）で見本が崩れていないことを確認する
+3. `_extensions/koyama/_extension.yml`（v2 は `v2/_extensions/koyama2/_extension.yml`）の `version` を上げ、`CHANGELOG.md` に書く
 4. コミットしてタグ（例：`v1.2.0`）を付け、`git push origin main --tags`
 5. 使っている人に、更新したことと CHANGELOG の要点を連絡する

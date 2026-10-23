@@ -161,6 +161,11 @@ quarto use template <koyama-beamer のパス> --no-prompt
 # 例（Windows）: quarto use template C:/Users/<名前>/koyama-beamer --no-prompt
 ```
 
+> **v2（16:9 のデザイン）を使うとき**は、パスの最後に `/v2` を付けます
+> （`quarto use template C:/Users/<名前>/koyama-beamer/v2 --no-prompt`）。
+> できるテンプレート本体は `_extensions/koyama2/`、ルールは [v2/docs/SlideRules.md](../v2/docs/SlideRules.md)。
+> v1 と v2 の違いは [README](../README.md) の「2つの版」。
+
 中に次の3つができます（`slide.qmd` の名前は、フォルダの名前に合わせて自動で付きます）。
 
 ```
@@ -214,6 +219,8 @@ git pull
 cd <研究のフォルダ>/report/slide
 quarto add <koyama-beamer のパス>
 ```
+
+v2 のスライドなら `quarto add <koyama-beamer のパス>/v2` です。
 
 「`[Update] 1.0.0 -> 1.1.0`」のように表示されます。続けてよいか聞かれたら `y` で進めると入れ替わります。
 
