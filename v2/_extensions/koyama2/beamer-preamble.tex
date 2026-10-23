@@ -311,12 +311,15 @@
 % （v1 の上部のナビバーと同じ形。表紙なので今の位置の ● は無い）。数は前回のコンパイルで数えたもの
 \def\koyama@titleprogress{%
   \ifnum\koyama@nsections>0
-    % 塗りの帯にはせず、上端に細い淡いティールの線だけ（タイトル下の線と同じ色。主張を弱める）
-    \draw[primary!65!white, line width=0.6pt] (0, -82.2mm) -- (\paperwidth, -82.2mm);
     \pgfmathsetlengthmacro\koyama@colw{(\paperwidth-12.6mm)/\koyama@nsections}%
     \koyama@i=0
     \loop\ifnum\koyama@i<\koyama@nsections\relax
       \advance\koyama@i by 1
+      % 塗りの帯にはせず、セクションごとの欄の上端に細い淡いティールの線（タイトル下の線と同じ色）。
+      % 線の両端を少し詰めて欄の間に隙間を作り、線の本数でセクションの数も見せる
+      \draw[primary!65!white, line width=0.6pt]
+        (6.3mm+\koyama@i*\koyama@colw-\koyama@colw+1.2mm, -82.2mm) --
+        (6.3mm+\koyama@i*\koyama@colw-1.2mm, -82.2mm);
       \pgfmathsetlengthmacro\koyama@ax{6.3mm+(\the\koyama@i-1)*\koyama@colw+1.5mm}%
       \node[anchor=west, inner sep=0pt, text=textmain, font=\fontsize{8}{9.5}\selectfont\bfseries]
         at (\koyama@ax, -84.7mm) {\csname koyama@sname@\the\koyama@i\endcsname};
