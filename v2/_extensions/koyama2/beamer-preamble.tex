@@ -267,7 +267,12 @@
 %   中央：タイトル（2行まで）＋ 淡いティールの線 ＋ 著者（名前と所属を横に並べる。発表者に *）
 %   最下部：本編のセクション名と、その下にスライドの数だけ ○ を並べた帯（全体の構成と枚数の目安）
 \newcommand{\koyamaAuthor}[3]{}
+\newif\ifkoyama@hasdate
 \def\koyama@drawtitlepage{%
+  \koyama@measureprogress
+  % 日付が空かどうかは、実際に組んだ幅で見る（\date を書かないときも \beamer@date は空にならない）
+  \setbox\z@\hbox{\insertdate}%
+  \ifdim\wd\z@>\z@ \koyama@hasdatetrue\else\koyama@hasdatefalse\fi
   \begin{tikzpicture}[overlay]
     \ifx\koyamaEvent\@empty
       \def\koyama@datey{-7.5mm}%
@@ -282,7 +287,7 @@
     \fi
     \node[anchor=east, inner sep=0pt, text=textmain, font=\fontsize{11}{13}\selectfont\bfseries]
       at (\paperwidth-8mm, \koyama@datey)
-      {\insertdate\ifx\koyamaVenue\@empty\else\ifx\beamer@date\@empty\else @\fi\koyamaVenue\fi};
+      {\insertdate\ifx\koyamaVenue\@empty\else\ifkoyama@hasdate @\fi\koyamaVenue\fi};
     \pgfmathsetlengthmacro\koyama@tw{\paperwidth-24mm}%
     \node[anchor=south, inner sep=0pt, align=flush center, text width=\koyama@tw, text=textmain,
           font=\fontsize{14.5}{24}\selectfont\bfseries]
@@ -307,34 +312,71 @@
     \koyama@titleprogress
   \end{tikzpicture}}
 
-% 表紙の最下部の帯：本編のセクションを等間隔に並べ、名前の下に、そのセクションのスライドの数だけ ○
-% （v1 の上部のナビバーと同じ形。表紙なので今の位置の ● は無い）。数は前回のコンパイルで数えたもの
-\def\koyama@titleprogress{%
+% 表紙の最下部：本編のセクション名と、その下にそのセクションのスライドの数だけ ○
+% （v1 の上部のナビバーと同じ形。表紙なので今の位置の ● は無い）。数は前回のコンパイルで数えたもの。
+% 欄の幅は「名前と ○ の列の長い方」に、余った幅を各欄へ等しく足したもの（名前が長い欄ほど広い）。
+% 各欄の上端に細い淡いティールの線（タイトル下の線と同じ色）。線の両端を少し詰めて、線の本数でセクションの数も見せる。
+\newdimen\koyama@wa
+\newdimen\koyama@wb
+\newdimen\koyama@wtot
+\newdimen\koyama@extra
+\newdimen\koyama@xpos
+\def\koyama@navfont{\fontsize{8}{9.5}\selectfont\bfseries}
+% ○ の数（前回のコンパイルで数えた、そのセクションの枚数）を \koyama@n に入れる
+\def\koyama@getn#1{%
+  \expandafter\ifx\csname koyama@nsec@#1\endcsname\relax
+    \def\koyama@n{0}%
+  \else
+    \edef\koyama@n{\csname koyama@nsec@#1\endcsname}%
+  \fi}
+% 1・2 は tikzpicture の外で行う（tikzpicture の中では欧文のフォントが \nullfont になり、幅が 0 と測られる）
+\def\koyama@measureprogress{%
   \ifnum\koyama@nsections>0
-    \pgfmathsetlengthmacro\koyama@colw{(\paperwidth-12.6mm)/\koyama@nsections}%
+    % 1. 各欄の中身の幅を測る（名前と ○ の列の長い方＋左右の余白 3mm）
+    \koyama@wtot=0pt
     \koyama@i=0
     \loop\ifnum\koyama@i<\koyama@nsections\relax
       \advance\koyama@i by 1
-      % 塗りの帯にはせず、セクションごとの欄の上端に細い淡いティールの線（タイトル下の線と同じ色）。
-      % 線の両端を少し詰めて欄の間に隙間を作り、線の本数でセクションの数も見せる
+      \setbox\z@\hbox{\koyama@navfont\csname koyama@sname@\the\koyama@i\endcsname}%
+      \koyama@wa=\wd\z@
+      \koyama@getn{\the\koyama@i}%
+      \koyama@wb=1.6mm
+      \multiply\koyama@wb by \koyama@n\relax
+      \ifdim\koyama@wb>\koyama@wa \koyama@wa=\koyama@wb\fi
+      \advance\koyama@wa by 3mm
+      \expandafter\edef\csname koyama@colw@\the\koyama@i\endcsname{\the\koyama@wa}%
+      \advance\koyama@wtot by \koyama@wa
+    \repeat
+    % 2. 余った幅を各欄に等しく足す（足りないときは足さない）
+    \koyama@extra=\paperwidth
+    \advance\koyama@extra by -12.6mm
+    \advance\koyama@extra by -\koyama@wtot
+    \divide\koyama@extra by \koyama@nsections
+    \ifdim\koyama@extra<0pt \koyama@extra=0pt\fi
+  \fi}
+\def\koyama@titleprogress{%
+  \ifnum\koyama@nsections>0
+    % 3. 左から順に描く
+    \koyama@xpos=6.3mm
+    \koyama@i=0
+    \loop\ifnum\koyama@i<\koyama@nsections\relax
+      \advance\koyama@i by 1
+      \koyama@wa=\csname koyama@colw@\the\koyama@i\endcsname
+      \advance\koyama@wa by \koyama@extra
+      \edef\koyama@x{\the\koyama@xpos}%
+      \edef\koyama@w{\the\koyama@wa}%
       \draw[primary!65!white, line width=0.6pt]
-        (6.3mm+\koyama@i*\koyama@colw-\koyama@colw+1.2mm, -82.2mm) --
-        (6.3mm+\koyama@i*\koyama@colw-1.2mm, -82.2mm);
-      \pgfmathsetlengthmacro\koyama@ax{6.3mm+(\the\koyama@i-1)*\koyama@colw+1.5mm}%
-      \node[anchor=west, inner sep=0pt, text=textmain, font=\fontsize{8}{9.5}\selectfont\bfseries]
-        at (\koyama@ax, -84.7mm) {\csname koyama@sname@\the\koyama@i\endcsname};
-      \expandafter\ifx\csname koyama@nsec@\the\koyama@i\endcsname\relax
-        \def\koyama@n{0}%
-      \else
-        \edef\koyama@n{\csname koyama@nsec@\the\koyama@i\endcsname}%
-      \fi
+        (\koyama@x+1.2mm, -82.2mm) -- (\koyama@x+\koyama@w-1.2mm, -82.2mm);
+      \node[anchor=base west, inner sep=0pt, text=textmain, font=\koyama@navfont]
+        at (\koyama@x+1.5mm, -85.6mm) {\csname koyama@sname@\the\koyama@i\endcsname};
+      \koyama@getn{\the\koyama@i}%
       \ifnum\koyama@n>0
-        \pgfmathsetlengthmacro\koyama@dstep{min(1.6mm, (\koyama@colw-3mm)/\koyama@n)}%
         \foreach \koyama@k in {1,...,\koyama@n}{%
           \draw[textmain, line width=0.4pt]
-            (\koyama@ax+0.5mm+\koyama@k*\koyama@dstep-\koyama@dstep, -87.6mm) circle (0.5mm);
+            (\koyama@x+2mm+\koyama@k*1.6mm-1.6mm, -87.8mm) circle (0.5mm);
         }%
       \fi
+      \advance\koyama@xpos by \koyama@wa
     \repeat
   \fi}
 
