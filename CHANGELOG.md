@@ -3,6 +3,18 @@
 版は、v1 が `ver1/_extensions/koyama/_extension.yml`、v2 が `ver2/_extensions/koyama2/_extension.yml` の `version`。
 v1 と v2 は別の拡張機能（`koyama-beamer` / `koyama2-beamer`）なので、版の番号もそれぞれで進む。
 
+## 研究フォルダとの接続（2026-10-23）
+
+テンプレートの拡張機能は変わらない（v1 1.1.0・v2 2.0.0 のまま）。見本と文書だけ。
+
+- 研究フォルダの `slides/` プロジェクト（`slides/_quarto.yml`、発表は `slides/YYMMDD_venue/index.qmd`）に入れる手順を追加
+  （v2 の recipes の 11.、v1 の recipes の 9.）。`index.qmd` への名前の変更、共有の `../references.bib`、`.gitignore` の追加
+- R のチャンクで図を描くときの設定を追加（v2 の recipes の 12.、v1 の recipes の 10.、各版の SlideRules の 7.）。
+  setup チャンクで `knitr::opts_chunk$set(dev = "cairo_pdf", fig.width = …, fig.height = …, out.width = "100%")`。
+  研究フォルダの `_quarto.yml` が図を `svg` で出す設定だと、PDF に貼れずビルドが止まるため
+- v2 の見本の YAML に `date-format: "YYYY.M.D"` を書いた（研究フォルダの `_quarto.yml` の `date-format: long` などより優先させるため）。
+  R の設定の書き方もコメントで添えた
+
 ## リポジトリの構成の変更（2026-10-23）
 
 v1 と v2 を、リポジトリの直下のそれぞれのフォルダ（`ver1/`・`ver2/`）に分けた。テンプレートの中身（v1 1.1.0）は変わらない。

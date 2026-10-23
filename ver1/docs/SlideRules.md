@@ -1,7 +1,7 @@
 # 発表スライド作成ルール v1（Quarto → Beamer、4:3）
 
 > v1（`koyama-beamer`、4:3）のルール。v2（16:9）のルールは [../../ver2/docs/SlideRules.md](../../ver2/docs/SlideRules.md)。
-
+>
 > このテンプレート（`koyama-beamer`）でスライドを作るときのデザインのルール。
 > 出力は **Quarto → Beamer PDF**（lualatex / metropolis + miniframes / Noto Sans + Noto Sans JP、4:3）。
 > 各ルールの実装（色・部品の定義）は `_extensions/koyama/beamer-preamble.tex`、使い方の実例は `template.qmd`。
@@ -172,6 +172,8 @@
   - タイトル＋リード1行＋図＋キャプション＋注2行 → **約 2.15 インチ**まで
   - タイトル＋図＋キャプションと注（2行まで）→ **約 2.4 インチ**まで（2.6 インチではキャプションがはみ出した）
 - 文字：フォントはスライドと同じ Noto Sans JP、軸 8.5pt・凡例 9pt。
+- R のチャンクで描く図は、setup チャンクで `dev = "cairo_pdf"`・`fig.width = 4.25`・`fig.height = 2.15`・`out.width = "100%"` にする
+  （[recipes.md](recipes.md) の 10.。研究フォルダの `slides/_quarto.yml` が `svg` で出す設定でも、これで PDF に貼れる）。
 - 図の中にタイトル・注は入れない（スライドのタイトル・リード文と `Note:` 行に書く）。N は凡例かパネルの見出しに。
 - 群は色だけに頼らず形も変える（例：処置 = `accent` ●、対照 = `primary` ▲）。
 - 新しい図は、テスト用のデッキで実寸に貼って、はみ出し・文字の大きさを目で確認してから本番に使う。

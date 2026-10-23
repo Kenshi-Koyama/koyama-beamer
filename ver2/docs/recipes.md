@@ -151,3 +151,56 @@ date: 2026-09-05                       # 「2026.9.5」と出る（date-format �
 
 `event:` を書かなければ、表紙の右上のグラデーションの帯も出ない（日付@会場だけ）。
 `subtitle:` を書くと、タイトルの下に少し小さく出る。
+
+## 11. 研究フォルダの `slides/` に入れる（発表ごとのフォルダ・共有の文献）
+
+研究フォルダが `slides/` を独立した Quarto プロジェクト（`slides/_quarto.yml`）にしていて、
+発表を `slides/YYMMDD_venue/index.qmd`（中に `code/`・`output/`・`data`）の形で置く場合の入れ方。
+
+```bash
+cd <研究フォルダ>/slides
+mkdir 261023_jhea && cd 261023_jhea                       # 空のフォルダを作って入る
+quarto use template <koyama-beamer のパス>/ver2 --no-prompt
+mv 261023_jhea.qmd index.qmd                              # 研究フォルダの決まりの名前に
+rm ref.bib                                                # 文献は共有の slides/references.bib を使う
+```
+
+`index.qmd` の YAML：
+
+```yaml
+bib-file: ../references.bib
+date-format: "YYYY.M.D"   # 見本に最初から入っている。slides/_quarto.yml の date-format より優先される
+```
+
+- 拡張機能は発表のフォルダ（`slides/261023_jhea/_extensions/koyama2/`）に入る。
+  発表を「凍結したスナップショット」として扱う方針に合う（テンプレートを更新しても、過去の発表は作ったときの版のまま）。
+  全部の発表で共有したいときは、`slides/` で `quarto add <koyama-beamer のパス>/ver2` を打てば `slides/_extensions/koyama2/` に入り、それでも動く
+- `slides/_quarto.yml` に `author:` があっても、発表の YAML に `author:` を書けば上書きされる
+- テンプレートは `keep-tex: true` なので `index.tex` が残る。研究フォルダの `.gitignore` に `slides/**/*.tex` を足す
+  （PDF と `*_files/` は、ふつうその研究フォルダの `.gitignore` で無視されている）
+- 同じ `slides/` の中の Touying（Typst）などの発表とは形式名が違うので、共存できる
+- `code/`・`output/`・`data` のリンクは、研究フォルダの決まりどおりに作る
+- R で図を描くときは、次の 12. を必ず行う（`slides/_quarto.yml` が図を `svg` で出す設定だと、ビルドが止まる）
+
+## 12. R のチャンクで図を描く
+
+最初の setup チャンクで、図の出し方をこのテンプレート（PDF・実寸）に合わせる。
+
+```r
+knitr::opts_chunk$set(
+  dev = "cairo_pdf",  # PDF に貼れる形式。svg のままだと rsvg-convert が無いとビルドが止まる
+  fig.width = 5.4,     # 本文の幅いっぱい（インチ）
+  fig.height = 1.9,    # タイトル＋図＋キャプション＋注2行で収まる高さ（リード文も入れるなら 1.6）
+  out.width = "100%"  # 縮小せず等倍で貼る（文字の大きさが狂わない）
+)
+ggplot2::theme_set(ggplot2::theme_classic(base_family = "Noto Sans JP", base_size = 9))
+```
+
+- YAML の `knitr: opts_chunk:` に書く方法もあるが、そうすると R のチャンクが無い発表でも R が呼ばれる。setup チャンクに書く
+- 研究フォルダの `slides/_quarto.yml` に `knitr: opts_chunk:`（`dev: svg`、`fig.width: 8` など）があっても、setup チャンクの設定が優先される
+  （YAML の `fig-format: pdf` では勝てない）
+- 図の文字はスライドと同じ Noto Sans JP、9pt（軸 8.5pt・凡例 9pt の目安。[SlideRules.md](SlideRules.md) の 7.）。日本語のラベルも出る
+- 図ごとに大きさを変えるときは、チャンクに `#| fig-width: 3` `#| fig-height: 1.6` のように書く
+  （2カラムの左に置く図は、幅をカラムの幅に合わせる。例：55% のカラムなら `5.4 * 0.55`）
+- R で作る表は `tinytable` の `tt()`（`modelsummary(..., output = "tinytable")` も）でそのまま貼れる（罫線は横だけになる）。
+  強調のセル（`\cellcolor{highlight!25}`）など細かい装飾が要る表は、Markdown か LaTeX で書く

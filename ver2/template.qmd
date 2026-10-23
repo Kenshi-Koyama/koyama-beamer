@@ -10,14 +10,19 @@ author:
   - name: 共著者名
     affiliation: 所属
 event: "学会名 第○回大会"
-venue: "会場"
+venue: "会場"                 # 日付のあとに「@会場」と出る（「@」は書かない）
 date: today
+date-format: "YYYY.M.D"       # 表紙の日付の形。研究フォルダの _quarto.yml に別の形があっても、これが優先される
 # --- 切り替えオプション（必要なときだけ書く） ---
 # section-outline: false      # 2つ目以降のセクション冒頭の目次を入れない（短い発表用）
-# bib-file: ../paper/refs.bib # 文献ファイル（既定はこのフォルダの ref.bib）
+# bib-file: ../references.bib # 文献ファイル（既定はこのフォルダの ref.bib。研究フォルダの slides/ なら ../references.bib）
 # palette:                    # この研究用に色を差し替える（書いた色だけ）
 #   primary: "1F4E79"
 # output-file: Name_slides.pdf
+# --- R のチャンクで図を描くとき ---
+# 最初の setup チャンクに次を書く（YAML の knitr: に書くと、R を使わない発表でも R が必要になる）。
+# 詳しくは docs/recipes.md の 12.
+#   knitr::opts_chunk$set(dev = "cairo_pdf", fig.width = 5.4, fig.height = 1.9, out.width = "100%")
 format:
   koyama2-beamer: default
 ---
