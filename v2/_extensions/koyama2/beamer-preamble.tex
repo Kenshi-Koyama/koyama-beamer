@@ -311,7 +311,8 @@
 % （v1 の上部のナビバーと同じ形。表紙なので今の位置の ● は無い）。数は前回のコンパイルで数えたもの
 \def\koyama@titleprogress{%
   \ifnum\koyama@nsections>0
-    \fill[primarylight] (0, -82.2mm) rectangle (\paperwidth, -\paperheight);
+    % 塗りの帯にはせず、上端に細い淡いティールの線だけ（タイトル下の線と同じ色。主張を弱める）
+    \draw[primary!65!white, line width=0.6pt] (0, -82.2mm) -- (\paperwidth, -82.2mm);
     \pgfmathsetlengthmacro\koyama@colw{(\paperwidth-12.6mm)/\koyama@nsections}%
     \koyama@i=0
     \loop\ifnum\koyama@i<\koyama@nsections\relax
