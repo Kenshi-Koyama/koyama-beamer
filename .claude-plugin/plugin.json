@@ -1,0 +1,10 @@
+{
+  "name": "koyama-beamer",
+  "displayName": "koyama-beamer（研究発表スライド）",
+  "description": "Quarto + Beamer で日本語の研究発表スライドを作る。テンプレート（ver1 4:3 / ver2 16:9）を研究フォルダに入れ、作る順番（workflow）とデザインのルール（SlideRules）に沿って、PDF の確認まで進めるスキル",
+  "author": {
+    "name": "Kenshi Koyama"
+  },
+  "repository": "https://github.com/Kenshi-Koyama/koyama-beamer",
+  "keywords": ["quarto", "beamer", "slides", "japanese", "research"]
+}

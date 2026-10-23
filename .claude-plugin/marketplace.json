@@ -1,0 +1,14 @@
+{
+  "name": "koyama-beamer",
+  "description": "Quarto + Beamer で日本語の研究発表スライドを作るテンプレート（v1 4:3 / v2 16:9）と、その作り方を案内するスキル",
+  "owner": {
+    "name": "Kenshi Koyama"
+  },
+  "plugins": [
+    {
+      "name": "koyama-beamer",
+      "source": ".",
+      "description": "研究発表のスライドを、版の選択から PDF の確認まで一緒に作るスキル（/koyama-beamer:slides）とテンプレート一式"
+    }
+  ]
+}

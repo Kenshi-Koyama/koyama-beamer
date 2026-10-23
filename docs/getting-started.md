@@ -14,7 +14,7 @@
 |---|---|---|
 | 1 | GitHub の招待を受ける | 最初の1回 |
 | 2 | ソフトを入れる（Git・Quarto・TinyTeX・フォント） | 最初の1回 |
-| 3 | テンプレートを手元にコピーする（clone） | 最初の1回 |
+| 3 | テンプレートを手元に入れる（Claude Code のプラグイン、または clone） | 最初の1回 |
 | 4 | 見本をビルドして、正しく動くか確かめる | 最初の1回 |
 | 5 | 版（v1 / v2）を選んで、自分のスライドを作る | 発表ごと |
 | 6 | テンプレートの更新を取り込む | 更新があったとき |
@@ -112,7 +112,35 @@ quarto check
 
 ---
 
-## 3. テンプレートを手元にコピーする（clone）
+## 3. テンプレートを手元に入れる
+
+VS Code などで **Claude Code を使う人は 3.1**（おすすめ）、使わない人は 3.2 に進んでください。両方してもかまいません。
+
+### 3.1 Claude Code を使う人：プラグインとして入れる
+
+Claude Code の入力欄に、次の2行を1行ずつ打ちます。
+
+```text
+/plugin marketplace add Kenshi-Koyama/koyama-beamer
+/plugin install koyama-beamer@koyama-beamer
+```
+
+テンプレート一式とスキル（スライド作りの案内）が入ります。clone は要りません。
+使うときは、研究フォルダを開いて「〇〇学会の発表スライドを作りたい」のように頼みます（`/koyama-beamer:slides` でも呼び出せます）。
+版の選択、テンプレートの導入（手順 5）、作る順番、ビルドと PDF の確認まで、Claude Code が案内します。
+
+このリポジトリは Private なので、プラグインの取得には GitHub へのログインが要ります。Claude Code は確認の画面を出さずに git を動かすので、
+次のどちらかを**先に**済ませておきます。
+
+- **SSH の鍵を GitHub に登録してある人**：そのままで動きます（鍵にパスフレーズがあるなら ssh-agent に読み込んでおく）
+- **それ以外の人**：一度、3.2 の `git clone`（https）でブラウザからログインしておくと、そのログインが使われます
+  （または GitHub CLI で `gh auth login` → `gh auth setup-git`）。そのうえで、SSH を試さずに https を使うよう設定します。
+  Windows はターミナルで `setx CLAUDE_CODE_PLUGIN_PREFER_HTTPS 1` を打ち、VS Code を開き直します
+  （macOS は `~/.zshrc` に `export CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1`）
+
+`Repository not found` や認証のエラーになったら、招待の承認（手順 1）と、上のログインを確かめてください。
+
+### 3.2 clone する（Claude Code を使わない人）
 
 テンプレートを置く場所に移動してから、コピーします。
 **場所のパスに空白や日本語が入らない**ところが無難です（例：ホームフォルダ）。
@@ -134,8 +162,9 @@ SSH の鍵を GitHub に登録してある人は、`git clone git@github.com:Ken
 
 ## 4. 見本をビルドして、正しく動くか確かめる
 
-テンプレートには2つの版があり、それぞれのフォルダ（`v1`・`v2`）に見本が入っています。
+テンプレートには2つの版があり、それぞれのフォルダ（`ver1`・`ver2`）に見本が入っています。
 どちらか一方で確かめれば十分です（ここでは v2）。
+3.1 のプラグインだけ入れた人は、Claude Code に「koyama-beamer の見本をビルドして確かめて」と頼めば、同じことをしてくれます。
 
 ```bash
 cd ~/koyama-beamer/ver2
@@ -223,6 +252,9 @@ quarto render slide.qmd
 cd ~/koyama-beamer
 git pull
 ```
+
+プラグイン（3.1）で入れた人は、Claude Code で `/plugin marketplace update koyama-beamer` を打ちます
+（`/plugin` の **Marketplaces** で koyama-beamer を選び **Enable auto-update** にしておくと、自動で届きます）。
 
 これで、**これから作るスライド**は新しい版になります。
 

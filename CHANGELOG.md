@@ -3,6 +3,18 @@
 版は、v1 が `ver1/_extensions/koyama/_extension.yml`、v2 が `ver2/_extensions/koyama2/_extension.yml` の `version`。
 v1 と v2 は別の拡張機能（`koyama-beamer` / `koyama2-beamer`）なので、版の番号もそれぞれで進む。
 
+## Claude Code のプラグインとスキル（2026-10-23）
+
+テンプレートの拡張機能は変わらない（v1 1.1.0・v2 2.0.0 のまま）。
+
+- このリポジトリを Claude Code のプラグインにした（`.claude-plugin/`）。
+  `/plugin marketplace add Kenshi-Koyama/koyama-beamer` → `/plugin install koyama-beamer@koyama-beamer` で、テンプレート一式とスキルが入る（clone 不要）
+- スキル `/koyama-beamer:slides`（`skills/slides/SKILL.md`）：研究発表のスライドを作るときに、環境の確認、版の選択、
+  研究フォルダへの導入（`slides/` プロジェクトなら `slides/YYMMDD_venue/index.qmd`）、workflow の6段階、SlideRules に沿った作成、
+  PDF の確認までを案内する。ルールは書き写さず、各版の docs を読みに行く
+- プラグインの `version` は書かない（push したコミットがそのまま更新として届く）
+- README・getting-started に、Claude Code で使う手順（Private のリポジトリの認証を含む）を追加
+
 ## 研究フォルダとの接続（2026-10-23）
 
 テンプレートの拡張機能は変わらない（v1 1.1.0・v2 2.0.0 のまま）。見本と文書だけ。

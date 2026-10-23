@@ -11,6 +11,23 @@ Markdown（Quarto）で書いて、Beamer の PDF スライドを出すテンプ
 
 ---
 
+## Claude Code で使う（おすすめ）
+
+VS Code などで Claude Code を使っているなら、このリポジトリをプラグインとして入れると、
+研究フォルダで「発表スライドを作りたい」と頼むだけで、版の選択から PDF の確認まで案内されます。
+テンプレートもプラグインと一緒に入るので、clone は要りません。
+
+```text
+/plugin marketplace add Kenshi-Koyama/koyama-beamer
+/plugin install koyama-beamer@koyama-beamer
+```
+
+- 使うとき：研究フォルダを開いて「〇〇学会の発表スライドを作りたい」のように頼む。`/koyama-beamer:slides` で呼び出してもよい
+- 前提：Quarto・TinyTeX・Noto Sans JP（[getting-started の 2.](docs/getting-started.md)）と、GitHub の招待（Private のため。手順は getting-started の 3.）
+- 更新：`/plugin marketplace update koyama-beamer`。`/plugin` の **Marketplaces** で **Enable auto-update** にすると自動で届く
+
+---
+
 ## どちらを使うか
 
 | | [v1](ver1/)（4:3） | [v2](ver2/)（16:9） |
@@ -81,6 +98,8 @@ v2 だけのもの（表紙）：`event:`（学会名）、`venue:`（会場）�
 koyama-beamer/
 ├── README.md              ← このページ（どちらを使うか）
 ├── CHANGELOG.md           ← 変更履歴（v1・v2 共通。更新を取り込む前に読む）
+├── .claude-plugin/        ← Claude Code のプラグインとマーケットプレイスの定義
+├── skills/slides/         ← Claude Code のスキル（/koyama-beamer:slides）。手順だけを書き、ルールは各版の docs を読む
 ├── docs/                  ← 両方の版で共通の文書
 │   ├── getting-started.md ←   はじめて使う人へ：インストールから最初のスライドまで、困ったとき
 │   ├── workflow.md        ←   作る順番（6段階）、カラーパレットの決め方、文言・図表の作り方
@@ -120,5 +139,7 @@ koyama-beamer/
    見本が崩れていないことを確認する（`-o` を付けないと `template.pdf` ができる。これは Git の管理外）。
    見た目が変わったら、README の画像も作り直す（`pdftoppm -png -r 110 -f 3 -l 3 -singlefile ver2/template_ver2.pdf docs/images/v2-slide`）
 3. その版の `_extensions/…/_extension.yml` の `version` を上げ、`CHANGELOG.md` に書く
-4. コミットしてタグ（例：`v1.2.0`、`v2.0.1`）を付け、`git push origin main --tags`
-5. 使っている人に、更新したことと CHANGELOG の要点を連絡する
+4. フォルダや文書の場所・手順が変わったら、スキル（`skills/slides/SKILL.md`）も直し、`claude plugin validate .` で確かめる
+5. コミットしてタグ（例：`v1.2.0`、`v2.0.1`）を付け、`git push origin main --tags`。
+   プラグインは `version` を書いていないので、push したコミットがそのまま更新として届く
+6. 使っている人に、更新したことと CHANGELOG の要点を連絡する
